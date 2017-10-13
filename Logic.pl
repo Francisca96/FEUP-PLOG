@@ -1,0 +1,56 @@
+piece(1,'B1').
+piece(2,'B2').
+piece(3,'B3').
+piece(4,'B4').
+piece(5,'B5').
+piece(6,'B6').
+piece(7,'B7').
+piece(8,'B8').
+piece(9,'B9').
+piece(10,'10').
+piece(11,'Y1').
+piece(12,'Y2').
+piece(13,'Y3').
+piece(14,'Y4').
+piece(15,'Y5').
+piece(16,'Y6').
+piece(17,'Y7').
+piece(18,'Y8').
+piece(19,'Y9').
+piece(20,'20').
+piece(21,'G1').
+piece(22,'G2').
+piece(23,'G3').
+piece(24,'G4').
+piece(25,'G5').
+piece(26,'G6').
+piece(27,'G7').
+piece(28,'G8').
+piece(29,'G9').
+piece(30,'30').
+piece(31,'R1').
+piece(32,'R2').
+piece(33,'R3').
+piece(34,'R4').
+piece(35,'R5').
+piece(36,'R6').
+piece(37,'R7').
+piece(38,'R8').
+piece(39,'R9').
+piece(40,'40').
+piece(0,'0').
+
+initialize_board(Board):-
+  Board=[[1,2,3,4],
+          [5,6,7],
+          [8,9],
+          [11,21],
+          [15,10,25],
+          [12,18,28,22],
+          [16,20,0,30,26],
+          [13,19,29,23],
+          [17,40,27],
+          [14,24],
+          [38,39],
+          [35,36,37],
+          [31,32,33,34]].
