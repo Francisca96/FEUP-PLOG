@@ -38,7 +38,7 @@ piece(37,'R7').
 piece(38,'R8').
 piece(39,'R9').
 piece(40,'40').
-piece(0,'0').
+piece(0,'50').
 
 initialize_board(Board):-
   Board=[[1,2,3,4],
