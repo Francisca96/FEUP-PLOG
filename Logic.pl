@@ -81,6 +81,7 @@ symbol(39, '39').
 symbol(40, '40').
 symbol(50, '50').
 
+
 initialize_board(Board):-
   Board=[[p1,p2,p3,p4],
           [p5,p6,p7],

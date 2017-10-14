@@ -15,8 +15,8 @@ position(14,yellow,[12,19]).
 position(15,yellow,[17,20]).
 position(16,yellow,[null]).
 position(17,yellow,[15,20]).
-position(18,yellow,[11,13,40,0]).
-position(19,yellow,[12,14,10,0]).
+position(18,yellow,[11,13,40,50]).
+position(19,yellow,[12,14,10,50]).
 position(20,yellow,[15,17,9,39,30]).
 position(21,green,[23,28]).
 position(22,green,[24,29]).
@@ -25,8 +25,8 @@ position(24,green,[22,29]).
 position(25,green,[27,30]).
 position(26,green,[null]).
 position(27,green,[25,30]).
-position(28,green,[21,23,40,0]).
-position(29,green,[22,24,10,0]).
+position(28,green,[21,23,40,50]).
+position(29,green,[22,24,10,50]).
 position(30,green,[25,27,8,38,20]).
 position(31,red,[33,38]).
 position(32,red,[34,39]).
@@ -35,7 +35,7 @@ position(34,red,[32,39]).
 position(35,red,[37,40]).
 position(36,red,[null]).
 position(37,red,[35,40]).
-position(38,red,[31,33,30,0]).
-position(39,red,[32,34,20,0]).
+position(38,red,[31,33,30,50]).
+position(39,red,[32,34,20,50]).
 position(40,red,[35,37,28,18,10]).
-position(0,center,[8,9,18,19,28,29,28,39]).
+position(50,center,[8,9,18,19,28,29,28,39]).
