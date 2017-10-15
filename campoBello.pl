@@ -1,6 +1,6 @@
 :-include('Logic.pl').
 :-include('Interface.pl').
-:-include('menus.pl').
+:-include('Menus.pl').
 
 main:-
   initialize_board(Board),
