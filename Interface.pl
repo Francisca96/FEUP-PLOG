@@ -1,10 +1,9 @@
 show_piece(p(Piece, Position)):-
-  Piece =:= 'null' ->
-    symbol(Position, Val),
-    write(Val);
-    symbol(Piece, Val),
-    write(Val).
-
+  Piece == null ->
+  symbol(Position, Val),
+  write(Val);
+  symbol(Piece, Val),
+  write(Val).
 
 
 display_board([L|T]):-
@@ -213,7 +212,7 @@ display_line_13([S|E]):-
   write('|             '),
   display_elems_line_13(S,E).
 display_elems_line_13([S|E],T):-
-  show_piece(S), 
+  show_piece(S),
   write('    '),
   display_elems_line_13(E, T).
   display_elems_line_13([], T):-
