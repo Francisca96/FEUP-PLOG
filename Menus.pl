@@ -32,4 +32,6 @@ menu(X):-
   write('        Player BLUE_RED vs Player YELLOW_GREEN '),
   nl,nl,
   initialize_board(Board),
-  display_board(Board).
+  initialize_players(Player1, Player2),
+  display_board(Board),
+  play(Board).
