@@ -23,8 +23,9 @@ initialize_board(Board):-
 play(Board):-
   ask_for_movement(Piece, Position),
   %verify_piece verificar se a peça é do jogador que ta a jogar
-  empty_pos(Position, Board),
-  change_board(Board, Piece, Position, NewBoard),
+  verify_empty_pos(Position, Board),
+  verify_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
+  change_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
   display_board(NewBoard).
 
 % pede a peça que se quer mover e a posição de destino
@@ -37,14 +38,24 @@ ask_for_movement(Piece, Position):-
   symbol(Position, Y).
 
 % verifica se a posição está vazia
-empty_pos(Position, Board):-
+verify_empty_pos(Position, Board):-
 	member(p(0, Position), Board).
 
-% altera a posição que tinha peça e a posição para onde foi a peça
-change_board(Board, Piece, Position, NewBoard):-
+verify_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos):-
   find_pos(Board, Piece, Pos),
-  substitute(p(Piece, Pos), p(0, Pos), Board, NewBoard1),
-  substitute(p(0, Position), p(Piece, Position), NewBoard1, NewBoard).
+  pos(Pos, List1),
+  pos(Position, List2),
+  member(CapturedPiecePos, List1),
+  member(CapturedPiecePos, List2),
+  find_pos(Board, CapturedPiece, CapturedPiecePos),
+  CapturedPiece \= 0.
+
+% altera a posição que tinha peça e a posição para onde foi a peça
+change_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard):-
+  find_pos(Board, Piece, Pos1),
+  substitute(p(Piece, Pos1), p(0, Pos1), Board, NewBoard1),
+  substitute(p(0, Position), p(Piece, Position), NewBoard1, NewBoard2),
+  substitute(p(CapturedPiece, CapturedPiecePos), p(0, CapturedPiecePos), NewBoard2, NewBoard).
 
 % devolve a posição onde está a peça
 find_pos(Board, Piece, Position):-
