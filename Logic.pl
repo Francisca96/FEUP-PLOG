@@ -19,6 +19,13 @@ initialize_board(Board):-
           p(p35, 35),p(p36, 36),p(p37, 37),
           p(p31, 31),p(p32, 32),p(p33, 33),p(p34, 34)].
 
+% predicado para substituir peças e posiçoes no tabuleiro
+substitute(X, Y, [], []).
+substitute(X, Y, [X|R], [Y|R]).
+substitute(X, Y, [Z|R1], [Z|R2]):-
+  Y \= Z,
+  substitute(X, Y, R1, R2).
+
 % inicio da jogada
 play(Board):-
   ask_for_movement(Piece, Position),
