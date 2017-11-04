@@ -31,7 +31,8 @@ play(Board):-
   ask_for_movement(Piece, Position),
   %verify_piece verificar se a peça é do jogador que ta a jogar
   verify_empty_pos(Position, Board),
-  verify_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
+  verify_piece_between(Board, Piece, Position),
+  get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
   change_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
   display_board(NewBoard).
 
@@ -39,7 +40,7 @@ play(Board):-
 ask_for_movement(Piece, Position):-
   nl, write('Choose a piece to move: '),
   read(X),
-  symbol(Piece, X),  %Vou buscar o nome da peça através do simbolo
+  symbol(Piece, X), % Vou buscar o nome da peça através do simbolo
   nl, write('For each position you want to move? '),
   read(Y),
   symbol(Position, Y).
@@ -48,7 +49,12 @@ ask_for_movement(Piece, Position):-
 verify_empty_pos(Position, Board):-
 	member(p(0, Position), Board).
 
-verify_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos):-
+verify_piece_between(Board, Piece, Position):-
+  find_pos(Board, Piece, Pos),
+  pos(Pos, List),
+  !, \+ member(Position, List).
+
+get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos):-
   find_pos(Board, Piece, Pos),
   pos(Pos, List1),
   pos(Position, List2),
