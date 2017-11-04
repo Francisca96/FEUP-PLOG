@@ -27,33 +27,41 @@ substitute(X, Y, [Z|R1], [Z|R2]):-
   substitute(X, Y, R1, R2).
 
 % inicio da jogada
-play(Board):-
-  ask_for_movement(Piece, Position),
-  %verify_piece verificar se a peça é do jogador que ta a jogar
+play(Board, Player):-
+  ask_for_movement(Piece, Position, Player),
   verify_empty_pos(Position, Board),
   verify_piece_between(Board, Piece, Position),
   get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
   change_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
+  %change_player(Player1, Player2, CapturedPiece),
+  %display_players(Player1, Player2),
   display_board(NewBoard).
 
 % pede a peça que se quer mover e a posição de destino
-ask_for_movement(Piece, Position):-
+ask_for_movement(Piece, Position, Player):-
   nl, write('Choose a piece to move: '),
   read(X),
   symbol(Piece, X), % Vou buscar o nome da peça através do simbolo
+  verify_piece(Piece, Player),
   nl, write('For each position you want to move? '),
   read(Y),
   symbol(Position, Y).
+
+% verifica se a peça é do jogador
+verify_piece(Piece, Player):-
+  member(Piece, Player).
 
 % verifica se a posição está vazia
 verify_empty_pos(Position, Board):-
 	member(p(0, Position), Board).
 
+% verifica se as posições não sao adjacentes
 verify_piece_between(Board, Piece, Position):-
   find_pos(Board, Piece, Pos),
   pos(Pos, List),
   !, \+ member(Position, List).
 
+% verifica se existe uma peça entre as posições e se sim devolve-a
 get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos):-
   find_pos(Board, Piece, Pos),
   pos(Pos, List1),
@@ -69,6 +77,14 @@ change_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard):
   substitute(p(Piece, Pos1), p(0, Pos1), Board, NewBoard1),
   substitute(p(0, Position), p(Piece, Position), NewBoard1, NewBoard2),
   substitute(p(CapturedPiece, CapturedPiecePos), p(0, CapturedPiecePos), NewBoard2, NewBoard).
+
+% altera arrays dos jogadores
+%change_player(Player1, Player2, CapturedPiece):-
+  %member(CapturedPiece, Player1) ->
+  %removeAll(CapturedPiece, Player1, Player),
+  %Player1 is Player;
+  %removeAll(CapturedPiece, Player2, Player),
+  %Player2 is Player.
 
 % devolve a posição onde está a peça
 find_pos(Board, Piece, Position):-

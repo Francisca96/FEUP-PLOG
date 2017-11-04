@@ -5,6 +5,22 @@ show_piece(p(Piece, Position)):-
   symbol(Piece, Val),
   write(Val).
 
+display_players(Player1, Player2):-
+  nl, write('Player BLUE_RED:'),
+  nl,
+  display_player(Player1),
+  nl, nl, write('Player YELLOW_GREEN:'),
+  nl,
+  display_player(Player2),
+  nl, nl.
+
+
+display_player([S|E]):-
+  write(' '),
+  write(S),
+  display_player(E).
+display_player([]).
+
 
 display_board(Board):-
   write('________________________________________________'),
@@ -242,4 +258,4 @@ display_elems_line_13(E, 5):-
   display_line_end.
 
 display_line_end:-
-    write('|_______________________________________________|').
+    write('|_______________________________________________|'), nl.
