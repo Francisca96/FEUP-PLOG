@@ -39,17 +39,32 @@ play(Board, Player):-
 
 % pede a peça que se quer mover e a posição de destino
 ask_for_movement(Piece, Position, Player):-
+  ask_piece(Piece),
+  verify_piece(Piece, Player),
+  ask_position(Position).
+
+ask_piece(Piece):-
   nl, write('Choose a piece to move: '),
   read(X),
-  symbol(Piece, X), % Vou buscar o nome da peça através do simbolo
-  verify_piece(Piece, Player),
+  symbol(Piece, X). % Vou buscar o nome da peça através do simbolo
+ask_piece(Piece):-
+  nl, write('Invalid piece!'), nl,
+  ask_piece(Piece).
+
+ask_position(Position):-
   nl, write('For each position you want to move? '),
   read(Y),
   symbol(Position, Y).
+ask_position(Position):-
+  nl, write('Invalid position!'), nl,
+  ask_position(Position).
 
 % verifica se a peça é do jogador
 verify_piece(Piece, Player):-
   member(Piece, Player).
+verify_piece(Piece, Player):-
+  nl, write('This piece isn\'t yours!'), nl,
+  ask_piece(Piece).
 
 % verifica se a posição está vazia
 verify_empty_pos(Position, Board):-
