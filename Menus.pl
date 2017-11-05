@@ -1,4 +1,6 @@
-main_menu:-nl,nl,
+main_menu:-
+write('\33\[2J'),
+nl,nl,
 write(' ______________________________________________________________________________ '),nl,
 write('|                                                                              |'),nl,
 write('|                                                                              |'),nl,
@@ -28,6 +30,7 @@ menu(R).
 
 menu(X):-
   X==1,
+  write('\33\[2J'),
   nl,
   write('        Player BLUE_RED vs Player YELLOW_GREEN '),
   nl,nl,

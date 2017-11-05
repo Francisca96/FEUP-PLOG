@@ -6,6 +6,7 @@ show_piece(p(Piece, Position)):-
   write(Val).
 
 display_players(Player1, Player2):-
+  write('\33\[2J'),
   nl, write('Player BLUE_RED:'),
   nl,
   display_player(Player1),
