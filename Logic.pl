@@ -27,15 +27,16 @@ substitute(X, Y, [Z|R1], [Z|R2]):-
   substitute(X, Y, R1, R2).
 
 % inicio da jogada
-play(Board, Player):-
-  ask_for_movement(Piece, Position, Player),
+play(Board, Player1, Player2):-
+  ask_for_movement(Piece, Position, Player1),
   verify_empty_pos(Position, Board),
   verify_piece_between(Board, Piece, Position),
   get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
-  change_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
-  %change_player(Player1, Player2, CapturedPiece),
-  %display_players(Player1, Player2),
-  display_board(NewBoard).
+  update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
+  update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2),
+  display_players(NewPlayer1, NewPlayer2),
+  display_board(NewBoard),
+  play(NewBoard, NewPlayer2, NewPlayer1).
 
 % pede a peça que se quer mover e a posição de destino
 ask_for_movement(Piece, Position, Player):-
@@ -87,19 +88,19 @@ get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos):-
   CapturedPiece \= 0.
 
 % altera a posição que tinha peça e a posição para onde foi a peça
-change_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard):-
+update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard):-
   find_pos(Board, Piece, Pos1),
   substitute(p(Piece, Pos1), p(0, Pos1), Board, NewBoard1),
   substitute(p(0, Position), p(Piece, Position), NewBoard1, NewBoard2),
   substitute(p(CapturedPiece, CapturedPiecePos), p(0, CapturedPiecePos), NewBoard2, NewBoard).
 
 % altera arrays dos jogadores
-%change_player(Player1, Player2, CapturedPiece):-
-  %member(CapturedPiece, Player1) ->
-  %removeAll(CapturedPiece, Player1, Player),
-  %Player1 is Player;
-  %removeAll(CapturedPiece, Player2, Player),
-  %Player2 is Player.
+update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2):-
+  member(CapturedPiece, Player1) ->
+  delete(Player1, CapturedPiece, NewPlayer1),
+  NewPlayer2 = Player2;
+  delete(Player2, CapturedPiece, NewPlayer2),
+  NewPlayer1 = Player1.
 
 % devolve a posição onde está a peça
 find_pos(Board, Piece, Position):-
