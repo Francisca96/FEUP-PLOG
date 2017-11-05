@@ -26,9 +26,17 @@ substitute(X, Y, [Z|R1], [Z|R2]):-
   Y \= Z,
   substitute(X, Y, R1, R2).
 
+game(Board, Player1, Player2, Round):-
+  Turn is Round mod 2,
+  Turn == 1 ->
+    (Player = Player1,
+    play(Board, Player1, Player2, Player, Round));
+    (Player = Player2,
+    play(Board, Player1, Player2, Player, Round)).
+
 % inicio da jogada
-play(Board, Player1, Player2):-
-  ask_for_movement(Piece, Position, Player1),
+play(Board, Player1, Player2, Player, Round):-
+  ask_for_movement(Piece, Position, Player),
   verify_empty_pos(Position, Board),
   verify_piece_between(Board, Piece, Position),
   get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
@@ -36,7 +44,9 @@ play(Board, Player1, Player2):-
   update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2),
   display_players(NewPlayer1, NewPlayer2),
   display_board(NewBoard),
-  play(NewBoard, NewPlayer2, NewPlayer1).
+  NewRound is Round+1,
+  game(NewBoard, NewPlayer1, NewPlayer2, NewRound).
+
 
 % pede a peça que se quer mover e a posição de destino
 ask_for_movement(Piece, Position, Player):-
@@ -48,7 +58,7 @@ ask_piece(Piece):-
   nl, write('Choose a piece to move: '),
   read(X),
   symbol(Piece, X). % Vou buscar o nome da peça através do simbolo
-ask_piece(Piece):-
+ask_piece(_):-
   nl, write('Invalid piece!'), nl,
   ask_piece(Piece).
 
@@ -56,16 +66,16 @@ ask_position(Position):-
   nl, write('For each position you want to move? '),
   read(Y),
   symbol(Position, Y).
-ask_position(Position):-
+ask_position(_):-
   nl, write('Invalid position!'), nl,
   ask_position(Position).
 
 % verifica se a peça é do jogador
 verify_piece(Piece, Player):-
   member(Piece, Player).
-verify_piece(Piece, Player):-
+verify_piece(_, Player):-
   nl, write('This piece isn\'t yours!'), nl,
-  ask_piece(Piece).
+  ask_for_movement(_, _, Player).
 
 % verifica se a posição está vazia
 verify_empty_pos(Position, Board):-

@@ -35,4 +35,4 @@ menu(X):-
   initialize_players(Player1, Player2),
   display_players(Player1, Player2),
   display_board(Board),
-  play(Board, Player1, Player2).
+  game(Board, Player1, Player2, 1).

@@ -14,7 +14,6 @@ display_players(Player1, Player2):-
   display_player(Player2),
   nl, nl.
 
-
 display_player([S|E]):-
   write(' '),
   write(S),
