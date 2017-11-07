@@ -115,3 +115,8 @@ update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2):-
 % devolve a posição onde está a peça
 find_pos(Board, Piece, Position):-
   member(p(Piece,Position), Board).
+
+%a lista [S|E] tem que ser passada usando pos(Position,PossiblePlays),
+verify_more_plays(Board,Position,[S|E]):-
+  verify_empty_pos(S,Board),
+  verify_more_plays(Board,E).
