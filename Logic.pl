@@ -41,6 +41,9 @@ play(Board, Player1, Player2, Player, Round):-
   verify_piece_between(Board, Piece, Position),
   get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
   update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
+%  position(Position,PossiblePlays),
+%  verify_more_plays(Board,Position,Piece,PossiblePlays),
+  is_game_over(Board,Player1),
   update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2),
   display_players(NewPlayer1, NewPlayer2),
   display_board(NewBoard),
@@ -116,7 +119,23 @@ update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2):-
 find_pos(Board, Piece, Position):-
   member(p(Piece,Position), Board).
 
-%a lista [S|E] tem que ser passada usando pos(Position,PossiblePlays),
-verify_more_plays(Board,Position,[S|E]):-
-  verify_empty_pos(S,Board),
-  verify_more_plays(Board,E).
+%verifica se com umda dada peça ainda existem mais jogadas possíveis
+%a lista [S|E] tem que ser passada usando position(Position,PossiblePlays),
+verify_more_plays(Board,Position,Piece,[]):-
+  fail.
+verify_more_plays(Board,Position,Piece,[S|E]):-
+  (verify_empty_pos(S,Board),
+  get_piece_between(Board,Piece,Position,C,C_P)
+);
+  verify_more_plays(Board,Position,Piece,E).
+
+
+
+ is_game_over(Board,[H|T]):-
+   fail.
+%recieve a player and verifies if he has any possible play
+ is_game_over(Board,[H|T]):-
+   (find_pos(Board,H,Position),
+   position(Position,List),
+   verify_more_plays(Board,Position,H,List));
+   is_game_over(Board,T).
