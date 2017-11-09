@@ -41,10 +41,12 @@ play(Board, Player1, Player2, Player, Round):-
   verify_piece_between(Board, Piece, Position),
   get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
   update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
-%  position(Position,PossiblePlays),
-%  verify_more_plays(Board,Position,Piece,PossiblePlays),
-  is_game_over(Board,Player1),
   update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2),
+  %%%%%%%%%%%%%%%%%%%%dois predicados necessarios para verificar se ha mais jogadas%%%%%%%%%%%%%%%%%%%%%%%%%
+  %position(Position,PossiblePlays),
+ % verify_more_plays(NewBoard,Position,Piece,PossiblePlays),
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %is_game_over(Board,Player1),
   display_players(NewPlayer1, NewPlayer2),
   display_board(NewBoard),
   NewRound is Round+1,
@@ -125,8 +127,8 @@ verify_more_plays(Board,Position,Piece,[]):-
   fail.
 verify_more_plays(Board,Position,Piece,[S|E]):-
   (verify_empty_pos(S,Board),
-  get_piece_between(Board,Piece,Position,C,C_P)
-);
+  find_pos(Board,S,Pos),
+  get_piece_between(Board,Piece,Pos,C,C_P));
   verify_more_plays(Board,Position,Piece,E).
 
 
