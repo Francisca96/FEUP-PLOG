@@ -250,7 +250,7 @@ display_elems_line_13([S|E], Counter):-
   show_piece(S),
   write('    '),
   display_elems_line_13(E, Counter1).
-display_elems_line_13(E, 5):-
+display_elems_line_13(_, 5):-
   write('          |'),
   nl,
   write('|                                               |'),

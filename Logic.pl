@@ -1,4 +1,4 @@
-p(Piece, Position).
+p(_, _).
 
 initialize_players(Player1, Player2):-
   Player1=[p1, p2, p3, p4, p5, p6, p7, p8, p9, p31, p32, p33, p34, p35, p36, p37, p38, p39],
@@ -20,7 +20,7 @@ initialize_board(Board):-
           p(p31, 31),p(p32, 32),p(p33, 33),p(p34, 34)].
 
 % predicado para substituir peças e posiçoes no tabuleiro
-substitute(X, Y, [], []).
+substitute(_, _, [], []).
 substitute(X, Y, [X|R], [Y|R]).
 substitute(X, Y, [Z|R1], [Z|R2]):-
   Y \= Z,
@@ -66,7 +66,7 @@ ask_piece(Piece):-
   symbol(Piece, X),!. % Vou buscar o nome da peça através do simbolo
 ask_piece(_):-
   nl, write('Invalid piece!'), nl,
-  ask_piece(Piece),!.
+  ask_piece(_),!.
 
 ask_position(Position):-
   nl, write('For each position you want to move? '),
@@ -74,12 +74,12 @@ ask_position(Position):-
   symbol(Position, Y).
 ask_position(_):-
   nl, write('Invalid position!'), nl,
-  ask_position(Position).
+  ask_position(_).
 
 % verifica se a peça é do jogador
 verify_piece(Piece, Player):-
   member(Piece, Player),!.
-verify_piece(_, Player):-
+verify_piece(_, _):-
   nl, write('This piece isn\'t yours!'), nl,
   fail.
 
@@ -124,17 +124,17 @@ find_pos(Board, Piece, Position):-
 
 %verifica se com umda dada peça ainda existem mais jogadas possíveis
 %a lista [S|E] tem que ser passada usando position(Position,PossiblePlays),
-verify_more_plays(Board,Position,Piece,[]):-
+verify_more_plays(_,_,_,[]):-
   fail.
 verify_more_plays(Board,Position,Piece,[S|E]):-
   (verify_empty_pos(S,Board),
   find_pos(Board,S,Pos),
-  get_piece_between(Board,Piece,Pos,C,C_P));
+  get_piece_between(Board,Piece,Pos,_,_));
   verify_more_plays(Board,Position,Piece,E).
 
 
 
- is_game_over(Board,[H|T]):-
+ is_game_over(_,[_|_]):-
    fail.
 %recieve a player and verifies if he has any possible play
  is_game_over(Board,[H|T]):-
