@@ -7,15 +7,15 @@ initialize_players(Player1, Player2):-
 initialize_board(Board):-
   Board=[p(p1, 1),p(p2, 2),p(p3, 3),p(p4, 4),
           p(p5, 5),p(p6, 6),p(p7, 7),
-          p(p8, 8),p(p9, 9),
+          p(0, 8),p(p9, 9),
           p(p11, 11),p(p21, 21),
-          p(p15, 15),p(0, 10),p(p25, 25),
+          p(p15, 15),p(p8, 10),p(p25, 25),
           p(p12, 12),p(p18, 18),p(p28, 28),p(p22, 22),
           p(p16, 16),p(0, 20),p(0, 50),p(0, 30),p(p26, 26),
           p(p13, 13),p(p19, 19),p(p29, 29),p(p23, 23),
-          p(p17, 17),p(0, 40),p(p27, 27),
+          p(p17, 17),p(p39, 40),p(p27, 27),
           p(p14, 14),p(p24, 24),
-          p(p38, 38),p(p39, 39),
+          p(p38, 38),p(0, 39),
           p(p35, 35),p(p36, 36),p(p37, 37),
           p(p31, 31),p(p32, 32),p(p33, 33),p(p34, 34)].
 
@@ -26,11 +26,14 @@ substitute(X, Y, [Z|R1], [Z|R2]):-
   Y \= Z,
   substitute(X, Y, R1, R2).
 
-game(Board, Player1, Player2, Round):-
-  Turn is Round mod 2,
+displays(Round, Player1, Player2, Board, Turn):-
   display_round(Round, Turn),
   display_players(Player1, Player2),
-  display_board(Board),
+  display_board(Board).
+
+game(Board, Player1, Player2, Round):-
+  Turn is Round mod 2,
+  displays(Round, Player1, Player2, Board, Turn),
   Turn == 1 ->
     (Player = Player1,
     play(Board, Player1, Player2, Player, Round));
@@ -45,15 +48,27 @@ play(Board, Player1, Player2, Player, Round):-
   get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
   update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
   update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2),
-  %%%%%%%%%%%%%%%%%%%%dois predicados necessarios para verificar se ha mais jogadas%%%%%%%%%%%%%%%%%%%%%%%%%
-  %position(Position,PossiblePlays),
-  %verify_more_plays(NewBoard,Position,Piece,PossiblePlays),
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   (is_game_over(Board,Player1),
   is_game_over(Board,Player2)),
   NewRound is Round+1,
+  verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
+    displays(Round, NewPlayer1, NewPlayer2, NewBoard, Turn),
+    nl, write('You can make another movement with this piece! Do you want?'), nl,
+    write('0 - No/1 - Yes'), nl,
+    read(Answer),
+    Answer == 1 ->
+    another_move(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard),
+    game(NBoard, NPlayer1, NPlayer2, NewRound);
   game(NewBoard, NewPlayer1, NewPlayer2, NewRound).
 
+another_move(Board, Piece, Round, Turn, Player1, Player2, NPlayer1, NPlayer2, NBoard):-
+  ask_position(Position),
+  verify_empty_pos(Position, Board),
+  verify_piece_between(Board, Piece, Position),
+  get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
+  update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NBoard),
+  update_player(Player1, Player2, CapturedPiece, NPlayer1, NPlayer2),
+  displays(Round, NPlayer1, NPlayer2, NBoard, Turn).
 
 % pede a peça que se quer mover e a posição de destino
 ask_for_movement(Piece, Position, Player):-
@@ -132,8 +147,6 @@ verify_more_plays(Board,Position,Piece,[S|E]):-
   (verify_empty_pos(S,Board),
   get_piece_between(Board,Piece,Position,_,_));
   verify_more_plays(Board,Position,Piece,E).
-
-
 
  is_game_over(_,[_|_]):-
    fail.
