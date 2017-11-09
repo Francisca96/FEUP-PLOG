@@ -46,7 +46,8 @@ play(Board, Player1, Player2, Player, Round):-
   %position(Position,PossiblePlays),
  % verify_more_plays(NewBoard,Position,Piece,PossiblePlays),
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  is_game_over(Board,Player1),
+  (is_game_over(Board,Player1),
+  is_game_over(Board,Player2)),
   display_players(NewPlayer1, NewPlayer2),
   display_board(NewBoard),
   NewRound is Round+1,
