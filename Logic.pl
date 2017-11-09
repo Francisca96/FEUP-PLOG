@@ -46,7 +46,7 @@ play(Board, Player1, Player2, Player, Round):-
   %position(Position,PossiblePlays),
  % verify_more_plays(NewBoard,Position,Piece,PossiblePlays),
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %is_game_over(Board,Player1),
+  is_game_over(Board,Player1),
   display_players(NewPlayer1, NewPlayer2),
   display_board(NewBoard),
   NewRound is Round+1,
@@ -128,8 +128,7 @@ verify_more_plays(_,_,_,[]):-
   fail.
 verify_more_plays(Board,Position,Piece,[S|E]):-
   (verify_empty_pos(S,Board),
-  find_pos(Board,S,Pos),
-  get_piece_between(Board,Piece,Pos,_,_));
+  get_piece_between(Board,Piece,Position,_,_));
   verify_more_plays(Board,Position,Piece,E).
 
 
