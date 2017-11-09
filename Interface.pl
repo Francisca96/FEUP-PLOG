@@ -5,8 +5,21 @@ show_piece(p(Piece, Position)):-
   symbol(Piece, Val),
   write(Val).
 
-display_players(Player1, Player2):-
+display_round(Round, 0):-
   write('\33\[2J'),
+  write('ROUND '),
+  write(Round), nl, nl, nl,
+  write('It\'s your turn Player YELLOW_GREEN!'),
+  nl.
+
+display_round(Round, 1):-
+  write('\33\[2J'),
+  write('ROUND '),
+  write(Round), nl, nl, nl,
+  write('It\'s your turn Player BLUE_RED!'),
+  nl.
+
+display_players(Player1, Player2):-
   nl, write('Player BLUE_RED:'),
   nl,
   display_player(Player1),

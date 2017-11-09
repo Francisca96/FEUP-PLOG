@@ -31,12 +31,6 @@ menu(R).
 
 menu(X):-
   X==1,
-  write('\33\[2J'),
-  nl,
-  write('        Player BLUE_RED vs Player YELLOW_GREEN '),
-  nl,nl,
   initialize_board(Board),
   initialize_players(Player1, Player2),
-  display_players(Player1, Player2),
-  display_board(Board),
   game(Board, Player1, Player2, 1).

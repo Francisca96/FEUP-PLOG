@@ -28,6 +28,9 @@ substitute(X, Y, [Z|R1], [Z|R2]):-
 
 game(Board, Player1, Player2, Round):-
   Turn is Round mod 2,
+  display_round(Round, Turn),
+  display_players(Player1, Player2),
+  display_board(Board),
   Turn == 1 ->
     (Player = Player1,
     play(Board, Player1, Player2, Player, Round));
@@ -44,12 +47,10 @@ play(Board, Player1, Player2, Player, Round):-
   update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2),
   %%%%%%%%%%%%%%%%%%%%dois predicados necessarios para verificar se ha mais jogadas%%%%%%%%%%%%%%%%%%%%%%%%%
   %position(Position,PossiblePlays),
- % verify_more_plays(NewBoard,Position,Piece,PossiblePlays),
- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %verify_more_plays(NewBoard,Position,Piece,PossiblePlays),
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   (is_game_over(Board,Player1),
   is_game_over(Board,Player2)),
-  display_players(NewPlayer1, NewPlayer2),
-  display_board(NewBoard),
   NewRound is Round+1,
   game(NewBoard, NewPlayer1, NewPlayer2, NewRound).
 
