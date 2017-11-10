@@ -52,17 +52,17 @@ play(Board, Player1, Player2, Player, Round):-
   is_game_over(Board,Player2)),
   NewRound is Round+1,
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %Score1=0,
+  % Score1=0,
   %calculate_score(Board,Player1,Score1),
   verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
     displays(Round, NewPlayer1, NewPlayer2, NewBoard, Turn),
     nl, write('You can make another movement with this piece! Do you want?'), nl,
     write('0 - No/1 - Yes'), nl,
     read(Answer),
-    Answer == 1 ->
+  ( Answer == 1 ->
     another_move(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard),
     game(NBoard, NPlayer1, NPlayer2, NewRound);
-  game(NewBoard, NewPlayer1, NewPlayer2, NewRound).
+  game(NewBoard, NewPlayer1, NewPlayer2, NewRound)).
 
 another_move(Board, Piece, Round, Turn, Player1, Player2, NPlayer1, NPlayer2, NBoard):-
   ask_position(Position),
