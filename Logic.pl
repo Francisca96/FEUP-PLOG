@@ -54,7 +54,6 @@ play(Board, Player1, Player2, Player, Round):-
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % Score1=0,
   %calculate_score(Board,Player1,Score1),
-  position(Position,PossiblePlays),
   (verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
     play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard);
     game(NewBoard, NewPlayer1, NewPlayer2, NewRound)).
@@ -65,7 +64,6 @@ play(Board, Player1, Player2, Player, Round):-
   play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard):-
     displays(Round, NewPlayer1, NewPlayer2, NewBoard, Turn),
     find_pos(NewBoard,Piece,Position),
-    position(Position,PossiblePlays),
     (verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
     nl, write('You can make another movement with this piece! Do you want?'), nl,
     write('0 - No/1 - Yes'), nl,
@@ -161,6 +159,7 @@ find_pos(Board, Piece, Position):-
 verify_more_plays(_,_,_,[]):-
   fail.
 verify_more_plays(Board,Position,Piece,[S|E]):-
+  position(Position,PossiblePlays),
   (verify_empty_pos(S,Board),
   get_piece_between(Board,Piece,Position,_,_));
   verify_more_plays(Board,Position,Piece,E).
@@ -170,7 +169,6 @@ verify_more_plays(Board,Position,Piece,[S|E]):-
 %recieve a player and verifies if he has any possible play
  is_game_over(Board,[H|T]):-
    (find_pos(Board,H,Position),
-   position(Position,List),
    verify_more_plays(Board,Position,H,List));
    is_game_over(Board,T).
 
