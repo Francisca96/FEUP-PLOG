@@ -53,7 +53,7 @@ play(Board, Player1, Player2, Player, Round):-
   NewRound is Round+1,
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %Score1=0,
-  %calculate_score(Board,Player1,Score1),      
+  %calculate_score(Board,Player1,Score1),
   verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
     displays(Round, NewPlayer1, NewPlayer2, NewBoard, Turn),
     nl, write('You can make another movement with this piece! Do you want?'), nl,
@@ -162,14 +162,14 @@ verify_more_plays(Board,Position,Piece,[S|E]):-
 
 calculate_score([],_,_):-
   fail.
-calculate_score([H|T],Player,Score):-
-  member(H,Player),
-  piece_color(H,C1),
-  find_pos([H|T],H,Pos),
+calculate_score([p(Piece, _)|T], Player,Score):-
+  member(Piece,Player),
+  piece_color(Piece,C1),
+  find_pos([p(Piece, _)|T],Piece,Pos),
   color(Pos,C2),
   (C1==C2 -> NewScore is Score + 3;
   NewScore is Score +1),
   calculate_score(T,Player,NewScore).
 
-calculate_score([H|T],Player,Score):-
+calculate_score([p(Piece, _)|T], Player,Score):-
   calculate_score(T,Player,Score).
