@@ -54,15 +54,29 @@ play(Board, Player1, Player2, Player, Round):-
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % Score1=0,
   %calculate_score(Board,Player1,Score1),
-  verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
+  position(Position,PossiblePlays),
+  (verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
+    play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard);
+    game(NewBoard, NewPlayer1, NewPlayer2, NewRound)).
+
+
+
+
+  play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard):-
     displays(Round, NewPlayer1, NewPlayer2, NewBoard, Turn),
+    find_pos(NewBoard,Piece,Position),
+    position(Position,PossiblePlays),
+    (verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
     nl, write('You can make another movement with this piece! Do you want?'), nl,
     write('0 - No/1 - Yes'), nl,
     read(Answer),
   ( Answer == 1 ->
     another_move(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard),
-    game(NBoard, NPlayer1, NPlayer2, NewRound);
-  game(NewBoard, NewPlayer1, NewPlayer2, NewRound)).
+    play_again(NBoard, Piece, Round, Turn, NPlayer1, NPlayer2, NPlayer1, NPlayer2, NBoard);
+  game(NewBoard, NewPlayer2, NewPlayer1, Round));
+  game(NewBoard, NewPlayer2, NewPlayer1, Round)  ).
+
+
 
 another_move(Board, Piece, Round, Turn, Player1, Player2, NPlayer1, NPlayer2, NBoard):-
   ask_position(Position),
