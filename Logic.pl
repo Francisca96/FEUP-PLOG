@@ -48,6 +48,7 @@ play(Board, Player1, Player2, Player, Round):-
   get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
   update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
   update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2),
+  displays(Round, NewPlayer1, NewPlayer2, NewBoard, Turn),
   (is_game_over(Board,Player1),
   is_game_over(Board,Player2)),
   NewRound is Round+1,
@@ -63,7 +64,7 @@ play(Board, Player1, Player2, Player, Round):-
 
 
   play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard):-
-    displays(Round, NewPlayer1, NewPlayer2, NewBoard, Turn),
+    NewRound is Round+1,
     find_pos(NewBoard,Piece,Position),
     possible_moves(Position,PossiblePlays),
     (verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
@@ -73,8 +74,8 @@ play(Board, Player1, Player2, Player, Round):-
   ( Answer == 1 ->
     another_move(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard),
     play_again(NBoard, Piece, Round, Turn, NPlayer1, NPlayer2, NPlayer1, NPlayer2, NBoard);
-  game(NewBoard, NewPlayer2, NewPlayer1, Round));
-  game(NewBoard, NewPlayer2, NewPlayer1, Round)  ).
+  game(NewBoard, NewPlayer1, NewPlayer2, NewRound));
+  game(NewBoard, NewPlayer1, NewPlayer2, NewRound)  ).
 
 
 
