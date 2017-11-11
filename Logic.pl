@@ -5,17 +5,17 @@ initialize_players(Player1, Player2):-
   Player2=[p11, p12, p13, p14, p15, p16, p17, p18, p19, p21, p22, p23, p24, p25, p26, p27, p28, p29].
 
 initialize_board(Board):-
-  Board=[p(p1, 1),p(p2, 2),p(p3, 3),p(p4, 4),
+  Board=[p(0, 1),p(p2, 2),p(p3, 3),p(p4, 4),
           p(p5, 5),p(p6, 6),p(p7, 7),
-          p(0, 8),p(p9, 9),
+          p(p8, 8),p(p9, 9),
           p(p11, 11),p(p21, 21),
-          p(p15, 15),p(p8, 10),p(p25, 25),
+          p(p15, 15),p(0, 10),p(p25, 25),
           p(p12, 12),p(p18, 18),p(p28, 28),p(p22, 22),
-          p(p16, 16),p(0, 20),p(0, 50),p(0, 30),p(p26, 26),
+          p(0, 16),p(p16, 20),p(p1, 50),p(0, 30),p(p26, 26),
           p(p13, 13),p(p19, 19),p(p29, 29),p(p23, 23),
-          p(p17, 17),p(p39, 40),p(p27, 27),
+          p(p17, 17),p(0, 40),p(p27, 27),
           p(p14, 14),p(p24, 24),
-          p(p38, 38),p(0, 39),
+          p(p38, 38),p(p39, 39),
           p(p35, 35),p(p36, 36),p(p37, 37),
           p(p31, 31),p(p32, 32),p(p33, 33),p(p34, 34)].
 
@@ -97,7 +97,7 @@ repeat,
 (  verify_more_plays(Board,Position,Piece,PossiblePlays)->
   verify_piece(Piece, Player),
   ask_position(Position);
-  nl, write( 'Choose a piece with possible plays'),nl).
+  nl, write( 'Choose a piece with possible plays!'),nl).
 
 ask_piece(Piece):-
   nl, write('Choose a piece to move: '),
@@ -110,7 +110,7 @@ ask_piece(_):-
 ask_position(Position):-
   nl, write('For each position you want to move? '),
   read(Y),
-  symbol(Pos, Y).
+  symbol(Position, Y).
 ask_position(_):-
   nl, write('Invalid position!'), nl,
   ask_position(_).
@@ -131,6 +131,34 @@ verify_next_pos(Board, Piece, Position):-
   find_pos(Board, Piece, Pos),
   possible_moves(Pos, List),
   member(Position, List).
+
+get_piece_between(Board, Piece, 10, CapturedPiece, CapturedPiecePos):-
+  find_pos(Board, Piece, Pos),
+  Pos == 40,
+  member(p(CapturedPiece, 50), Board),
+  CapturedPiece \= 0,
+  CapturedPiecePos = 50.
+
+get_piece_between(Board, Piece, 20, CapturedPiece, CapturedPiecePos):-
+  find_pos(Board, Piece, Pos),
+  Pos == 30,
+  member(p(CapturedPiece, 50), Board),
+  CapturedPiece \= 0,
+  CapturedPiecePos = 50.
+
+get_piece_between(Board, Piece, 30, CapturedPiece, CapturedPiecePos):-
+  find_pos(Board, Piece, Pos),
+  Pos == 20,
+  member(p(CapturedPiece, 50), Board),
+  CapturedPiece \= 0,
+  CapturedPiecePos = 50.
+
+get_piece_between(Board, Piece, 40, CapturedPiece, CapturedPiecePos):-
+  find_pos(Board, Piece, Pos),
+  Pos == 10,
+  member(p(CapturedPiece, 50), Board),
+  CapturedPiece \= 0,
+  CapturedPiecePos = 50.
 
 
 % verifica se existe uma peça entre as posições e se sim devolve-a
