@@ -60,6 +60,12 @@ play(Board, Player1, Player2, Player, Round, Turn):-
 
 
 
+    play_vs_bot(Board,Player,Bot,Round, Turn):-
+      ask_for_movement(Piece, Position, Player,Board),
+      verify_empty_pos(Position, Board),
+      verify_next_pos(Board, Piece, Position),
+      get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos).
+
 
   play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard, FirstPos):-
     NewRound is Round+1,
@@ -210,8 +216,8 @@ verify_more_plays(Board,Position,Piece,[S|E],PosMove):-
   verify_more_plays(Board,Position,Piece,E,PosMove).
 
 check_game_over(Board, Player1, Player2):-
-  (is_game_over(Board,Player1);
-  is_game_over(Board,Player2)) ->
+  ( \+ is_game_over(Board,Player1);
+  \+ is_game_over(Board,Player2)) ->
     (Score = 0,
     write('Player BLUE_RED score: '),
     calculate_score(Board, Player1, Score, FinalScore1),
@@ -224,12 +230,12 @@ check_game_over(Board, Player1, Player2):-
         nl, nl, write('IT\'S A TIE!')),
     display_quit,
     abort).
-  check_game_over(_, _, _):-
-    fail.
+  check_game_over(_, _, _).
+  
 
 
-is_game_over(_,[_|_]):-
-  !, nl, write('FINISH!'), nl, nl.
+  %  is_game_over(_,[_|_]):-
+  %    !, nl, write('FINISH!'), nl, nl, fail.
 
 %recieve a player and verifies if he has any possible play
 is_game_over(Board,[H|T]):-
@@ -237,6 +243,8 @@ is_game_over(Board,[H|T]):-
   possible_moves(Position,List),
   verify_more_plays(Board,Position,H,List));
   is_game_over(Board,T).
+
+
 
 calculate_score([],_,Score, FinalScore):-
   FinalScore = Score,
