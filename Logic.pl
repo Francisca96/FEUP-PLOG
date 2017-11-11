@@ -50,14 +50,13 @@ play(Board, Player1, Player2, Player, Round, Turn):-
   get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
   update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
   update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2),
-  FirstPos is Pos,
   displays(Round, NewPlayer1, NewPlayer2, NewBoard, Turn),
-  check_game_over(Board, NewPlayer1, NewPlayer2),
+ check_game_over(Board, NewPlayer1, NewPlayer2),
   NewRound is Round+1,
   possible_moves(Position,PossiblePlays),
-  write(FirstPos),
-  (verify_more_plays(NewBoard,Position,Piece,PossiblePlays, 1) ->
-    play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard, 1);
+  FirstPos = Pos,
+  (verify_more_plays(NewBoard,Position,Piece,PossiblePlays, FirstPos) ->
+    play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard, FirstPos);
     game(NewBoard, NewPlayer1, NewPlayer2, NewRound)).
 
 
@@ -251,7 +250,7 @@ isnt_game_over(_,[]):-
 isnt_game_over(Board,[H|T]):-
   (find_pos(Board,H,Position),
   possible_moves(Position,List),
-  verify_more_plays(Board,Position,H,List, FirstPos));
+  verify_more_plays(Board,Position,H,List));
   isnt_game_over(Board,T).
 
 
