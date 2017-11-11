@@ -36,12 +36,12 @@ game(Board, Player1, Player2, Round):-
   displays(Round, Player1, Player2, Board, Turn),
   Turn == 1 ->
     (Player = Player1,
-    play(Board, Player1, Player2, Player, Round));
+    play(Board, Player1, Player2, Player, Round, Turn));
     (Player = Player2,
-    play(Board, Player1, Player2, Player, Round)).
+    play(Board, Player1, Player2, Player, Round, Turn)).
 
 % inicio da jogada
-play(Board, Player1, Player2, Player, Round):-
+play(Board, Player1, Player2, Player, Round, Turn):-
   ask_for_movement(Piece, Position, Player,Board),
   verify_empty_pos(Position, Board),
   verify_next_pos(Board, Piece, Position),
