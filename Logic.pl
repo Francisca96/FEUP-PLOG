@@ -44,18 +44,20 @@ game(Board, Player1, Player2, Round):-
 % inicio da jogada
 play(Board, Player1, Player2, Player, Round, Turn):-
   ask_for_movement(Piece, Position, Player,Board),
-  FirstPos = Position,
+  find_pos(Board, Piece, Pos),
   verify_empty_pos(Position, Board),
   verify_next_pos(Board, Piece, Position),
   get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
   update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
   update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2),
+  FirstPos is Pos,
   displays(Round, NewPlayer1, NewPlayer2, NewBoard, Turn),
   check_game_over(Board, NewPlayer1, NewPlayer2),
   NewRound is Round+1,
   possible_moves(Position,PossiblePlays),
-  (verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
-    play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard, FirstPos);
+  write(FirstPos),
+  (verify_more_plays(NewBoard,Position,Piece,PossiblePlays, 1) ->
+    play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard, 1);
     game(NewBoard, NewPlayer1, NewPlayer2, NewRound)).
 
 
@@ -71,21 +73,20 @@ play(Board, Player1, Player2, Player, Round, Turn):-
     NewRound is Round+1,
     find_pos(NewBoard,Piece,Position),
     possible_moves(Position,PossiblePlays),
-    (verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
+    (verify_more_plays(NewBoard,Position,Piece,PossiblePlays, FirstPos) ->
     nl, write('You can make another movement with this piece! Do you want?'), nl,
     write('0 - No/1 - Yes'), nl,
     read(Answer),
   ( Answer == 1 ->
-    another_move(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard, FirstPos),
+    another_move(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard),
     play_again(NBoard, Piece, Round, Turn, NPlayer1, NPlayer2, NPlayer1, NPlayer2, NBoard, FirstPos);
   game(NewBoard, NewPlayer1, NewPlayer2, NewRound));
   game(NewBoard, NewPlayer1, NewPlayer2, NewRound)  ).
 
 
 
-another_move(Board, Piece, Round, Turn, Player1, Player2, NPlayer1, NPlayer2, NBoard, FirstPos):-
+another_move(Board, Piece, Round, Turn, Player1, Player2, NPlayer1, NPlayer2, NBoard):-
   ask_position(Position),
-  Positon \= FirstPos,
   verify_empty_pos(Position, Board),
   verify_next_pos(Board, Piece, Position),
   get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
@@ -198,26 +199,35 @@ find_pos(Board, Piece, Position):-
 %verifica se com umda dada peça ainda existem mais jogadas possíveis
 %a lista [S|E] tem que ser passada usando possible_moves(Position,PossiblePlays),
 verify_more_plays(_,_,_,[]):-
-  fail.
+  !,fail.
 verify_more_plays(Board,Position,Piece,[S|E]):-
   (verify_empty_pos(S,Board),
   verify_next_pos(Board,Piece,S),
   get_piece_between(Board,Piece,S,_,_));
   verify_more_plays(Board,Position,Piece,E).
 
+verify_more_plays(_,_,_,[], _):-
+  !,fail.
+verify_more_plays(Board,Position,Piece,[S|E], FirstPos):-
+  (S \= FirstPos,
+  verify_empty_pos(S,Board),
+  verify_next_pos(Board,Piece,S),
+  get_piece_between(Board,Piece,S,_,_));
+  verify_more_plays(Board,Position,Piece,E, FirstPos).
 
-verify_more_plays(_,_,_,[],_):-
-  fail.
-verify_more_plays(Board,Position,Piece,[S|E],PosMove):-
-  PosMove=S,
-  (verify_empty_pos(PosMove,Board),
-  verify_next_pos(Board,Piece,PosMove),
-  get_piece_between(Board,Piece,PosMove,_,_));
-  verify_more_plays(Board,Position,Piece,E,PosMove).
+
+%verify_more_plays(_,_,_,[],_):-
+%  !,fail.
+%verify_more_plays(Board,Position,Piece,[S|E],PosMove):-
+%  PosMove=S,
+%  (verify_empty_pos(PosMove,Board),
+%  verify_next_pos(Board,Piece,PosMove),
+%  get_piece_between(Board,Piece,PosMove,_,_));
+%  verify_more_plays(Board,Position,Piece,E,PosMove).
 
 check_game_over(Board, Player1, Player2):-
-  ( \+ is_game_over(Board,Player1);
-  \+ is_game_over(Board,Player2)) ->
+  ( \+ isnt_game_over(Board,Player1);
+  \+ isnt_game_over(Board,Player2)) ->
     (Score = 0,
     write('Player BLUE_RED score: '),
     calculate_score(Board, Player1, Score, FinalScore1),
@@ -231,18 +241,18 @@ check_game_over(Board, Player1, Player2):-
     display_quit,
     abort).
   check_game_over(_, _, _).
-  
 
 
-  %  is_game_over(_,[_|_]):-
-  %    !, nl, write('FINISH!'), nl, nl, fail.
+
+isnt_game_over(_,[]):-
+  !, nl, write('FINISH!'), nl, nl, fail.
 
 %recieve a player and verifies if he has any possible play
-is_game_over(Board,[H|T]):-
+isnt_game_over(Board,[H|T]):-
   (find_pos(Board,H,Position),
   possible_moves(Position,List),
-  verify_more_plays(Board,Position,H,List));
-  is_game_over(Board,T).
+  verify_more_plays(Board,Position,H,List, FirstPos));
+  isnt_game_over(Board,T).
 
 
 
