@@ -258,10 +258,9 @@ isnt_game_over(Board,[H|T]):-
 calculate_score([],_,Score, FinalScore):-
   FinalScore = Score,
   !, write(Score).
-calculate_score([p(Piece, _)|T], Player,Score, FinalScore):-
+calculate_score([p(Piece, Pos)|T], Player,Score, FinalScore):-
   member(Piece,Player),
   piece_color(Piece,C1),
-  find_pos([p(Piece, _)|T],Piece,Pos),
   color(Pos,C2),
   (C1==C2 -> NewScore is Score + 3;
   NewScore is Score +1),
