@@ -29,7 +29,7 @@ display_how_to_play:-
   display_quit.
 
 display_quit:-
-  nl, write('Bye bye... Hope to see you soon!'), nl, nl.
+  nl, nl, write('Bye bye... Hope to see you soon!'), nl, nl.
 
 display_round(Round, 0):-
   write('\33\[2J'),
