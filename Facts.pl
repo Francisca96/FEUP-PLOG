@@ -5,8 +5,8 @@ possible_moves(4,[2,9]).
 possible_moves(5,[7,10]).
 possible_moves(6,[null]).
 possible_moves(7,[5,10]).
-possible_moves(8,[1,3,30,0]).
-possible_moves(9,[2,4,20,0]).
+possible_moves(8,[1,3,30,50]).
+possible_moves(9,[2,4,20,50]).
 possible_moves(10,[5,7,19,29,40]).
 possible_moves(11,[13,18]).
 possible_moves(12,[14,19]).

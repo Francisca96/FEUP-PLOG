@@ -82,7 +82,7 @@ play(Board, Player1, Player2, Player, Round):-
 another_move(Board, Piece, Round, Turn, Player1, Player2, NPlayer1, NPlayer2, NBoard):-
   ask_position(Position),
   verify_empty_pos(Position, Board),
-  verify_piece_between(Board, Piece, Position),
+  verify_next_pos(Board, Piece, Position),
   get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
   update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NBoard),
   update_player(Player1, Player2, CapturedPiece, NPlayer1, NPlayer2),
@@ -123,10 +123,11 @@ verify_empty_pos(Position, Board):-
 	member(p(0, Position), Board).
 
 % verifica se as posições não sao adjacentes
-verify_piece_between(Board, Piece, Position):-
+verify_next_pos(Board, Piece, Position):-
   find_pos(Board, Piece, Pos),
-  adj_pos(Pos, List),
-  !, \+ member(Position, List).
+  possible_moves(Pos, List),
+  member(Position, List).
+
 
 % verifica se existe uma peça entre as posições e se sim devolve-a
 get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos):-
@@ -163,7 +164,7 @@ verify_more_plays(_,_,_,[]):-
   fail.
 verify_more_plays(Board,Position,Piece,[S|E]):-
   (verify_empty_pos(S,Board),
-  verify_piece_between(Board,Piece,S),
+  verify_next_pos(Board,Piece,S),
   get_piece_between(Board,Piece,S,_,_));
   verify_more_plays(Board,Position,Piece,E).
 
@@ -173,7 +174,7 @@ verify_more_plays(Board,Position,Piece,[S|E]):-
   verify_more_plays(Board,Position,Piece,[S|E],PosMove):-
     PosMove=S,
     (verify_empty_pos(PosMove,Board),
-    verify_piece_between(Board,Piece,PosMove),
+    verify_next_pos(Board,Piece,PosMove),
     get_piece_between(Board,Piece,PosMove,_,_));
     verify_more_plays(Board,Position,Piece,E,PosMove).
 
