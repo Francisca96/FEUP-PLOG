@@ -35,11 +35,23 @@ menu(1):-
   game(Board, Player1, Player2, 1).
 
 menu(2):-
+  write('Choose Bot Level:'), nl,
+  write('1 - Easy'), nl,
+  write('2 - Hard'), nl,
+  read(Level),
   initialize_board(Board).
   %initialize_players(Player1, Player2),
   %game(Board, Player1, Player2, 1).
 
 menu(3):-
+  write('Choose 1st Bot Level:'), nl,
+  write('1 - Easy'), nl,
+  write('2 - Hard'), nl,
+  read(Level1), nl,
+  write('Choose 2nd Bot Level:'), nl,
+  write('1 - Easy'), nl,
+  write('2 - Hard'), nl,
+  read(Level2),
   initialize_board(Board).
   %initialize_players(Player1, Player2),
   %game(Board, Player1, Player2, 1).
