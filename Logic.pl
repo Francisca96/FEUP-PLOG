@@ -136,28 +136,28 @@ get_piece_between(Board, Piece, 10, CapturedPiece, CapturedPiecePos):-
   find_pos(Board, Piece, Pos),
   Pos == 40,
   member(p(CapturedPiece, 50), Board),
-  CapturedPiece \= 0,
+  !, CapturedPiece \= 0,
   CapturedPiecePos = 50.
 
 get_piece_between(Board, Piece, 20, CapturedPiece, CapturedPiecePos):-
   find_pos(Board, Piece, Pos),
   Pos == 30,
   member(p(CapturedPiece, 50), Board),
-  CapturedPiece \= 0,
+  !, CapturedPiece \= 0,
   CapturedPiecePos = 50.
 
 get_piece_between(Board, Piece, 30, CapturedPiece, CapturedPiecePos):-
   find_pos(Board, Piece, Pos),
   Pos == 20,
   member(p(CapturedPiece, 50), Board),
-  CapturedPiece \= 0,
+  !, CapturedPiece \= 0,
   CapturedPiecePos = 50.
 
 get_piece_between(Board, Piece, 40, CapturedPiece, CapturedPiecePos):-
   find_pos(Board, Piece, Pos),
   Pos == 10,
   member(p(CapturedPiece, 50), Board),
-  CapturedPiece \= 0,
+  !, CapturedPiece \= 0,
   CapturedPiecePos = 50.
 
 
@@ -169,7 +169,7 @@ get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos):-
   member(CapturedPiecePos, List1),
   member(CapturedPiecePos, List2),
   find_pos(Board, CapturedPiece, CapturedPiecePos),
-  CapturedPiece \= 0.
+  !, CapturedPiece \= 0.
 
 % altera a posição que tinha peça e a posição para onde foi a peça
 update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard):-
@@ -201,23 +201,23 @@ verify_more_plays(Board,Position,Piece,[S|E]):-
   verify_more_plays(Board,Position,Piece,E).
 
 
-  verify_more_plays(_,_,_,[],_):-
-    fail.
-  verify_more_plays(Board,Position,Piece,[S|E],PosMove):-
-    PosMove=S,
-    (verify_empty_pos(PosMove,Board),
-    verify_next_pos(Board,Piece,PosMove),
-    get_piece_between(Board,Piece,PosMove,_,_));
-    verify_more_plays(Board,Position,Piece,E,PosMove).
+verify_more_plays(_,_,_,[],_):-
+  fail.
+verify_more_plays(Board,Position,Piece,[S|E],PosMove):-
+  PosMove=S,
+  (verify_empty_pos(PosMove,Board),
+  verify_next_pos(Board,Piece,PosMove),
+  get_piece_between(Board,Piece,PosMove,_,_));
+  verify_more_plays(Board,Position,Piece,E,PosMove).
 
- is_game_over(_,[_|_]):-
-   fail.
+is_game_over(_,[_|_]):-
+ fail.
 %recieve a player and verifies if he has any possible play
- is_game_over(Board,[H|T]):-
-   (find_pos(Board,H,Position),
-   possible_moves(Position,List),
-   verify_more_plays(Board,Position,H,List));
-   is_game_over(Board,T).
+is_game_over(Board,[H|T]):-
+  (find_pos(Board,H,Position),
+  possible_moves(Position,List),
+  verify_more_plays(Board,Position,H,List));
+  is_game_over(Board,T).
 
 calculate_score([],_,_):-
   fail.
