@@ -5,6 +5,24 @@ show_piece(p(Piece, Position)):-
   symbol(Piece, Val),
   write(Val).
 
+display_how_to_play:-
+  write('\33\[2J'),
+  write('RULES'), nl,
+  write('Lorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem '), nl,
+  write('Lorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem '), nl,
+  write('Lorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem '), nl,
+  write('Lorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem '), nl,
+  write('Lorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem '), nl,
+  nl, write('1 - Turn back to menu'),
+  nl, write('2 - Quit'),
+  nl, read(R),
+  (R==1,
+  main_menu);
+  display_quit.
+
+display_quit:-
+  nl, write('Bye bye... Hope to see you soon!'), nl.
+
 display_round(Round, 0):-
   write('\33\[2J'),
   write('ROUND '),
@@ -30,7 +48,8 @@ display_players(Player1, Player2):-
 
 display_player([S|E]):-
   write(' '),
-  write(S),
+  symbol(S, Symbol),
+  write(Symbol),
   display_player(E).
 display_player([]).
 

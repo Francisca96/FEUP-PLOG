@@ -196,11 +196,11 @@ calculate_score([p(Piece, _)|T], Player,Score):-
   NewScore is Score +1),
   calculate_score(T,Player,NewScore).
 
-calculate_score([p(Piece, _)|T], Player,Score):-
+calculate_score([p(_, _)|T], Player,Score):-
   calculate_score(T,Player,Score).
 
 %recieve bot pieces
-  dumbot_play(Board,[H|T],Player1,Player2,NewPlayer1,NewPlayer2):-
+dumbot_play(Board,[H|T],Player1,Player2,NewPlayer1,NewPlayer2):-
   (find_pos(Board,H,Position),
   position(Position,List),
   verify_more_plays(Board,Positon,H,List,PosMove),
@@ -208,5 +208,3 @@ calculate_score([p(Piece, _)|T], Player,Score):-
   update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
   update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2));
   dumbot_play(Board,T,Player1,Player2,NewPlayer1,NewPlayer2).
-
-  
