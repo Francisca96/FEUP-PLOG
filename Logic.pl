@@ -162,8 +162,19 @@ verify_more_plays(_,_,_,[]):-
   fail.
 verify_more_plays(Board,Position,Piece,[S|E]):-
   (verify_empty_pos(S,Board),
-  get_piece_between(Board,Piece,Position,_,_));
+  verify_piece_between(Board,Piece,S),
+  get_piece_between(Board,Piece,S,_,_));
   verify_more_plays(Board,Position,Piece,E).
+
+
+  verify_more_plays(_,_,_,[],_):-
+    fail.
+  verify_more_plays(Board,Position,Piece,[S|E],PosMove):-
+    PosMove=S,
+    (verify_empty_pos(PosMove,Board),
+    verify_piece_between(Board,Piece,PosMove),
+    get_piece_between(Board,Piece,PosMove,_,_));
+    verify_more_plays(Board,Position,Piece,E,PosMove).
 
  is_game_over(_,[_|_]):-
    fail.
@@ -187,3 +198,15 @@ calculate_score([p(Piece, _)|T], Player,Score):-
 
 calculate_score([p(Piece, _)|T], Player,Score):-
   calculate_score(T,Player,Score).
+
+%recieve bot pieces
+  dumbot_play(Board,[H|T],Player1,Player2,NewPlayer1,NewPlayer2):-
+  (find_pos(Board,H,Position),
+  position(Position,List),
+  verify_more_plays(Board,Positon,H,List,PosMove),
+  get_piece_between(Board, H, PosMove, CapturedPiece, CapturedPiecePos),
+  update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
+  update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2));
+  dumbot_play(Board,T,Player1,Player2,NewPlayer1,NewPlayer2).
+
+  
