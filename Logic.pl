@@ -54,7 +54,7 @@ play(Board, Player1, Player2, Player, Round):-
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % Score1=0,
   %calculate_score(Board,Player1,Score1),
-  position(Position,PossiblePlays),
+  possible_moves(Position,PossiblePlays),
   (verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
     play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard);
     game(NewBoard, NewPlayer1, NewPlayer2, NewRound)).
@@ -65,7 +65,7 @@ play(Board, Player1, Player2, Player, Round):-
   play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard):-
     displays(Round, NewPlayer1, NewPlayer2, NewBoard, Turn),
     find_pos(NewBoard,Piece,Position),
-    position(Position,PossiblePlays),
+    possible_moves(Position,PossiblePlays),
     (verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
     nl, write('You can make another movement with this piece! Do you want?'), nl,
     write('0 - No/1 - Yes'), nl,
@@ -124,14 +124,14 @@ verify_empty_pos(Position, Board):-
 % verifica se as posições não sao adjacentes
 verify_piece_between(Board, Piece, Position):-
   find_pos(Board, Piece, Pos),
-  pos(Pos, List),
+  adj_pos(Pos, List),
   !, \+ member(Position, List).
 
 % verifica se existe uma peça entre as posições e se sim devolve-a
 get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos):-
   find_pos(Board, Piece, Pos),
-  pos(Pos, List1),
-  pos(Position, List2),
+  adj_pos(Pos, List1),
+  adj_pos(Position, List2),
   member(CapturedPiecePos, List1),
   member(CapturedPiecePos, List2),
   find_pos(Board, CapturedPiece, CapturedPiecePos),
@@ -157,7 +157,7 @@ find_pos(Board, Piece, Position):-
   member(p(Piece,Position), Board).
 
 %verifica se com umda dada peça ainda existem mais jogadas possíveis
-%a lista [S|E] tem que ser passada usando position(Position,PossiblePlays),
+%a lista [S|E] tem que ser passada usando possible_moves(Position,PossiblePlays),
 verify_more_plays(_,_,_,[]):-
   fail.
 verify_more_plays(Board,Position,Piece,[S|E]):-
@@ -181,7 +181,7 @@ verify_more_plays(Board,Position,Piece,[S|E]):-
 %recieve a player and verifies if he has any possible play
  is_game_over(Board,[H|T]):-
    (find_pos(Board,H,Position),
-   position(Position,List),
+   possible_moves(Position,List),
    verify_more_plays(Board,Position,H,List));
    is_game_over(Board,T).
 
@@ -202,7 +202,7 @@ calculate_score([p(_, _)|T], Player,Score):-
 %recieve bot pieces
 dumbot_play(Board,[H|T],Player1,Player2,NewPlayer1,NewPlayer2):-
   (find_pos(Board,H,Position),
-  position(Position,List),
+  possible_moves(Position,List),
   verify_more_plays(Board,Positon,H,List,PosMove),
   get_piece_between(Board, H, PosMove, CapturedPiece, CapturedPiecePos),
   update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
