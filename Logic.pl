@@ -42,9 +42,9 @@ game(Board, Player1, Player2, Round):-
 
 % inicio da jogada
 play(Board, Player1, Player2, Player, Round):-
-  ask_for_movement(Piece, Position, Player),
+  ask_for_movement(Piece, Position, Player,Board),
   verify_empty_pos(Position, Board),
-  verify_piece_between(Board, Piece, Position),
+  verify_next_pos(Board, Piece, Position),
   get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
   update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
   update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2),
@@ -89,11 +89,15 @@ another_move(Board, Piece, Round, Turn, Player1, Player2, NPlayer1, NPlayer2, NB
   displays(Round, NPlayer1, NPlayer2, NBoard, Turn).
 
 % pede a peça que se quer mover e a posição de destino
-ask_for_movement(Piece, Position, Player):-
+ask_for_movement(Piece, Position, Player,Board):-
 repeat,
   ask_piece(Piece),
+  find_pos(Board,Piece,Pos),
+  possible_moves(Pos,PossiblePlays),
+(  verify_more_plays(Board,Position,Piece,PossiblePlays)->
   verify_piece(Piece, Player),
-  ask_position(Position).
+  ask_position(Position);
+  nl, write( 'Choose a piece with possible plays'),nl).
 
 ask_piece(Piece):-
   nl, write('Choose a piece to move: '),
@@ -106,7 +110,7 @@ ask_piece(_):-
 ask_position(Position):-
   nl, write('For each position you want to move? '),
   read(Y),
-  symbol(Position, Y).
+  symbol(Pos, Y).
 ask_position(_):-
   nl, write('Invalid position!'), nl,
   ask_position(_).
