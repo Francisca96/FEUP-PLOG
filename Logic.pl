@@ -64,17 +64,37 @@ play(Board, Player1, Player2, Player, Round, Turn):-
       displays(Round, Player, Bot, Board, Turn),
       check_game_over(Board, Player, Bot),
       ask_for_movement(Piece, Position, Player,Board),
+      find_pos(Board, Piece, Pos),
       verify_empty_pos(Position, Board),
       verify_next_pos(Board, Piece, Position),
       get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
       update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
       update_player(Player, Bot, CapturedPiece, NewPlayer, NewBot),
       NewRound is Round+2,
-      %possible_moves(Position,PossiblePlays),
-      %(verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
-      %play_again(NewBoard, Piece, Round, Turn, NewPlayer, NewBot, NPlayer1, NPlayer2, NBoard, FirstPos);
+      possible_moves(Position,PossiblePlays),
+      FirstPos = Pos,
+      (verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
+        displays(Round, NewPlayer, NewBot, NewBoard, Turn),
+      play_again_bot(NewBoard, Piece,NewRound, Turn, NewPlayer, NewBot, NPlayer1, NPlayer2, NBoard, FirstPos);
       !, dumbot_play(NewBoard,NewBot,NewPlayer,NewBot,NPlayer,NBot,NBoard),
-      play_vs_bot(NBoard, NPlayer, NBot, NewRound,Turn).
+      play_vs_bot(NBoard, NPlayer, NBot, NewRound,Turn)).
+
+
+
+      play_again_bot(NewBoard, Piece,Round,Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard, FirstPos):-
+        find_pos(NewBoard,Piece,Position),
+        possible_moves(Position,PossiblePlays),
+        (verify_more_plays(NewBoard,Position,Piece,PossiblePlays, FirstPos) ->
+        nl, write('You can make another movement with this piece! Do you want?'), nl,
+        write('0 - No/1 - Yes'), nl,
+        read(Answer),
+      ( Answer == 1 ->
+        another_move(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard),
+        play_again_bot(NBoard, Piece, Round, Turn, NPlayer1, NPlayer2, Player1, Player2, Board, FirstPos);
+        dumbot_play(NewBoard,NewPlayer2,NewPlayer1,NewPlayer2,NPlayer,NBot,NBoard),
+      play_vs_bot(NBoard, NPlayer, NBot, Round,Turn));
+        (dumbot_play(NewBoard,NewPlayer2,NewPlayer1,NewPlayer2,NPlayer,NBot,NBoard),
+      play_vs_bot(NBoard, NPlayer, NBot, Round,Turn))).
 
 
   play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard, FirstPos):-
