@@ -324,16 +324,16 @@ bot_play(Board,[H|T],Player,Bot,NewPlayer,NewBot,NBoard, 0):-
 %smart
 create_list_plays([],_,_,[],[],[]).
 
-create_list_plays([H|T],Board,Bot,[PosMove | NewList],[NewValue | NewList],[H | NewPieces_List]):-
+create_list_plays([H|T],Board,Bot,[PosMove | NewList],[NewValue | NewValues_List],[H | NewPieces_List]):-
   find_pos(Board,H,Position),
   possible_moves(Position,PossiblePlays),
   verify_more_plays(Board,Position,H,PossiblePlays,PosMove,0),
   get_piece_between(Board, H, PosMove, CapturedPiece, CapturedPiecePos),
   atribute_value_play(Board,H,PosMove,CapturedPiece,Bot,0,NewValue),
-  create_list_plays(T,Board,Bot,NewList,NewList,NewPieces_List).
+  create_list_plays(T,Board,Bot,NewList,NewValues_List,NewPieces_List).
 
-create_list_plays([H|T],Board,Bot,NewList,NewList,NewPieces_List):-
-  create_list_plays(T,Board,Bot,NewList,NewList,NewPieces_List).
+create_list_plays([H|T],Board,Bot,NewList,NewValues_List,NewPieces_List):-
+  create_list_plays(T,Board,Bot,NewList,NewValues_List,NewPieces_List).
 
 atribute_value_play(Board,Piece,PositionPlay,CapturedPiece,Bot,Value,NewValue):-
 find_pos(Board,Piece,Position),
