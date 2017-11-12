@@ -32,6 +32,15 @@ displays(Round, Player1, Player2, Board, Turn):-
   display_players(Player1, Player2),
   display_board(Board).
 
+  game(Board, Player1, Player2, Round):-
+  Turn is Round mod 2,
+  displays(Round, Player1, Player2, Board, Turn),
+  Turn == 1 ->
+    (Player = Player1,
+    play(Board, Player1, Player2, Player, Round, Turn));
+    (Player = Player2,
+    play(Board, Player1, Player2, Player, Round, Turn)).
+
 % inicio da jogada
 play(Board, Player1, Player2, Player, Round, Turn):-
   ask_for_movement(Piece, Position, Player,Board),
@@ -270,11 +279,11 @@ calculate_score([p(_, _)|T], Player,Score, FinalScore):-
   calculate_score(T,Player,Score, FinalScore).
 
 %recieve bot pieces
-dumbot_play(Board,[H|T],Player,Bot,NewPlayer,NewBot,NewBoard):-
+dumbot_play(Board,[H|T],Player,Bot,NewPlayer,NewBot,NBoard):-
   (find_pos(Board,H,Position),
   possible_moves(Position,List),
   verify_more_plays(Board,Position,H,List,PosMove,0),
   get_piece_between(Board, H, PosMove, CapturedPiece, CapturedPiecePos),
-  update_board(Board, H, PosMove, CapturedPiece, CapturedPiecePos, NewBoard),
+  update_board(Board, H, PosMove, CapturedPiece, CapturedPiecePos, NBoard),
   update_player(Player, Bot, CapturedPiece, NewPlayer, NewBot));
-  dumbot_play(NewBoard,T,Player,Bot,NewPlayer,NewBot,NewBoard).
+  dumbot_play(Board,T,Player,Bot,NewPlayer,NewBot,NBoard).
