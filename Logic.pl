@@ -56,7 +56,7 @@ play(Board, Player1, Player2, Player, Round, Turn):-
   possible_moves(Position,PossiblePlays),
   FirstPos = Pos,
   (verify_more_plays(NewBoard,Position,Piece,PossiblePlays, FirstPos) ->
-    play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard, FirstPos);
+    play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, FirstPos);
     game(NewBoard, NewPlayer1, NewPlayer2, NewRound)).
 
 
@@ -94,23 +94,23 @@ bot_vs_bot(Board, Bot1, Bot2, Level1, Level2, Round, Turn):-
   bot_vs_bot(NBoard, NBot1, NBot2, Level1, Level2, NRound, NTurn).
 
 
-play_again_bot(NewBoard, Piece,Round,Turn, NewPlayer1, NewPlayer2, NBoard, FirstPos, Level):-
-  find_pos(NewBoard,Piece,Position),
+play_again_bot(Board, Piece,Round,Turn, Player, Bot, FirstPos, Level):-
+  find_pos(Board,Piece,Position),
   possible_moves(Position,PossiblePlays),
-  (verify_more_plays(NewBoard,Position,Piece,PossiblePlays, FirstPos) ->
+  (verify_more_plays(Board,Position,Piece,PossiblePlays, FirstPos) ->
   nl, write('You can make another movement with this piece! Do you want?'), nl,
   write('0 - No/1 - Yes'), nl,
   read(Answer),
   ( Answer == 1 ->
-    another_move(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard),
-    play_again_bot(NBoard, Piece, Round, Turn, NPlayer1, NPlayer2, Board, FirstPos, Level);
-    bot_play(NewBoard,NewPlayer2,NewPlayer1,NewPlayer2,NPlayer,NBot,NBoard, Level),
-    play_vs_bot(NBoard, NPlayer, NBot, Round,Turn, Level));
-    (bot_play(NewBoard,NewPlayer2,NewPlayer1,NewPlayer2,NPlayer,NBot,NBoard, Level),
-    play_vs_bot(NBoard, NPlayer, NBot, Round,Turn, Level))).
+    another_move(Board, Piece, Round, Turn, Player, Bot, NewPlayer, NewBot, NewBoard),
+    play_again_bot(NewBoard, Piece, Round, Turn, NewPlayer, NewBot, FirstPos, Level);
+    bot_play(Board,Bot,Player,Bot,NPlayer,NBot,NewBoard, Level),
+    play_vs_bot(NewBoard, NPlayer, NBot, Round,Turn, Level));
+    (bot_play(Board,Bot,Player,Bot,NPlayer,NBot,NewBoard, Level),
+    play_vs_bot(NewBoard, NPlayer, NBot, Round,Turn, Level))).
 
 
-  play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard, FirstPos):-
+  play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, FirstPos):-
     NewRound is Round+1,
     find_pos(NewBoard,Piece,Position),
     possible_moves(Position,PossiblePlays),
@@ -120,7 +120,7 @@ play_again_bot(NewBoard, Piece,Round,Turn, NewPlayer1, NewPlayer2, NBoard, First
     read(Answer),
   ( Answer == 1 ->
     another_move(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard),
-    play_again(NBoard, Piece, Round, Turn, NPlayer1, NPlayer2, NPlayer1, NPlayer2, NBoard, FirstPos);
+    play_again(NBoard, Piece, Round, Turn, NPlayer1, NPlayer2, FirstPos);
   game(NewBoard, NewPlayer1, NewPlayer2, NewRound));
   game(NewBoard, NewPlayer1, NewPlayer2, NewRound)  ).
 
