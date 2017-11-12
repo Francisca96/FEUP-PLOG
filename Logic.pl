@@ -75,15 +75,26 @@ play_vs_bot(Board,Player,Bot,Round, Turn, Level):-
   FirstPos = Pos,
   (verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
     displays(Round, NewPlayer, NewBot, NewBoard, Turn),
-  play_again_bot(NewBoard, Piece,NewRound, Turn, NewPlayer, NewBot, NPlayer1, NPlayer2, NBoard, FirstPos, Level);
+  play_again_bot(NewBoard, Piece,NewRound, Turn, NewPlayer, NewBot, NBoard, FirstPos, Level);
   !, bot_play(NewBoard,NewBot,NewPlayer,NewBot,NPlayer,NBot,NBoard, Level),
   play_vs_bot(NBoard, NPlayer, NBot, NewRound,Turn, Level)).
 
-bot_vs_bot(Board, Bot1, Bot2, Level1, Level2, Round):-
+bot_vs_bot(Board, Bot1, Bot2, Level1, Level2, Round, Turn):-
+  check_game_over(Board, Bot1, Bot2),
+  bot_play(Board, Bot1, Bot2, Bot1, NewBot1, NewBot2, NewBoard, Level1),
+  displays(Round, NewBot2, NewBot1, NewBoard, Turn),
+  read(Enter),
+  NewRound is Round+1,
+  NewTurn is NewRound mod 2,
+  bot_play(NewBoard, NewBot1, NewBot2, NewBot1, NBot1, NBot2, NBoard, Level2),
+  displays(NewRound, NBot1, NBot2, NBoard, NewTurn),
+  read(Enter),
+  NRound is NewRound+1,
+  NTurn is NRound mod 2,
+  bot_vs_bot(NBoard, NBot1, NBot2, Level1, Level2, NRound, NTurn).
 
 
-
-play_again_bot(NewBoard, Piece,Round,Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard, FirstPos, Level):-
+play_again_bot(NewBoard, Piece,Round,Turn, NewPlayer1, NewPlayer2, NBoard, FirstPos, Level):-
   find_pos(NewBoard,Piece,Position),
   possible_moves(Position,PossiblePlays),
   (verify_more_plays(NewBoard,Position,Piece,PossiblePlays, FirstPos) ->
@@ -92,7 +103,7 @@ play_again_bot(NewBoard, Piece,Round,Turn, NewPlayer1, NewPlayer2, NPlayer1, NPl
   read(Answer),
   ( Answer == 1 ->
     another_move(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard),
-    play_again_bot(NBoard, Piece, Round, Turn, NPlayer1, NPlayer2, Player1, Player2, Board, FirstPos, Level);
+    play_again_bot(NBoard, Piece, Round, Turn, NPlayer1, NPlayer2, Board, FirstPos, Level);
     bot_play(NewBoard,NewPlayer2,NewPlayer1,NewPlayer2,NPlayer,NBot,NBoard, Level),
     play_vs_bot(NBoard, NPlayer, NBot, Round,Turn, Level));
     (bot_play(NewBoard,NewPlayer2,NewPlayer1,NewPlayer2,NPlayer,NBot,NBoard, Level),
