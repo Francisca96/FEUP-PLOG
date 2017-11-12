@@ -62,13 +62,13 @@ play(Board, Player1, Player2, Player, Round, Turn):-
 
     play_vs_bot(Board,Player,Bot,Round, Turn):-
       displays(Round, Player, Bot, Board, Turn),
+      check_game_over(Board, Player, Bot),
       ask_for_movement(Piece, Position, Player,Board),
       verify_empty_pos(Position, Board),
       verify_next_pos(Board, Piece, Position),
       get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
       update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
       update_player(Player, Bot, CapturedPiece, NewPlayer, NewBot),
-      check_game_over(Board, NewPlayer, NewBot),
       NewRound is Round+2,
       %possible_moves(Position,PossiblePlays),
       %(verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
