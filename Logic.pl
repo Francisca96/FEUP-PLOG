@@ -311,7 +311,7 @@ calculate_score([p(_, _)|T], Player,Score, FinalScore):-
   calculate_score(T,Player,Score, FinalScore).
 
 %dumb
-bot_play(Board,Pieces,Player,Bot,NewPlayer,NewBot,NBoard, 0):-
+bot_play(Board,[H|T],Player,Bot,NewPlayer,NewBot,NBoard, 0):-
   %dumb_list(Pieces,Board,NewPieces_list),
   (find_pos(Board,H,Position),
   possible_moves(Position,List),
