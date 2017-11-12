@@ -84,7 +84,7 @@ bot_vs_bot(Board, Bot1, Bot2, Level1, Level2, Round, Turn):-
   read(Enter),
   NewRound is Round+1,
   NewTurn is NewRound mod 2,
-  bot_play(NewBoard, NewBot2, NewBot2, NewBot1, NBot2, NBot1, NBoard, Level2),
+  bot_play(NewBoard, NewBot2, NewBot1, NewBot2, NBot1, NBot2, NBoard, Level2),
   displays(NewRound, NBot1, NBot2, NBoard, NewTurn),
   read(Enter),
   NRound is NewRound+1,
