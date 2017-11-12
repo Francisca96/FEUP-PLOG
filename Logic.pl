@@ -31,7 +31,7 @@ displays(Round, Player1, Player2, Board, Turn):-
   display_players(Player1, Player2),
   display_board(Board).
 
-  game(Board, Player1, Player2, Round):-
+game(Board, Player1, Player2, Round):-
   Turn is Round mod 2,
   displays(Round, Player1, Player2, Board, Turn),
   Turn == 1 ->
@@ -50,14 +50,13 @@ play(Board, Player1, Player2, Player, Round, Turn):-
   update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
   update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2),
   displays(Round, NewPlayer1, NewPlayer2, NewBoard, Turn),
- check_game_over(Board, NewPlayer1, NewPlayer2),
+  check_game_over(Board, NewPlayer1, NewPlayer2),
   NewRound is Round+1,
   possible_moves(Position,PossiblePlays),
   FirstPos = Pos,
   (verify_more_plays(NewBoard,Position,Piece,PossiblePlays, FirstPos) ->
     play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, FirstPos);
     game(NewBoard, NewPlayer1, NewPlayer2, NewRound)).
-
 
 play_vs_bot(Board,Player,Bot,Round, Turn, Level):-
   displays(Round, Player, Bot, Board, Turn),
@@ -74,9 +73,9 @@ play_vs_bot(Board,Player,Bot,Round, Turn, Level):-
   FirstPos = Pos,
   (verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
     displays(Round, NewPlayer, NewBot, NewBoard, Turn),
-  play_again_bot(NewBoard, Piece,NewRound, Turn, NewPlayer, NewBot, FirstPos, Level);
-  !, bot_play(NewBoard,NewBot,NewPlayer,NewBot,NPlayer,NBot,NBoard, Level),
-  play_vs_bot(NBoard, NPlayer, NBot, NewRound,Turn, Level)).
+    play_again_bot(NewBoard, Piece,NewRound, Turn, NewPlayer, NewBot, FirstPos, Level);
+    !, bot_play(NewBoard,NewBot,NewPlayer,NewBot,NPlayer,NBot,NBoard, Level),
+    play_vs_bot(NBoard, NPlayer, NBot, NewRound,Turn, Level)).
 
 bot_vs_bot(Board, Bot1, Bot2, Level1, Level2, Round, Turn):-
   check_game_over(Board, Bot1, Bot2),
@@ -91,7 +90,6 @@ bot_vs_bot(Board, Bot1, Bot2, Level1, Level2, Round, Turn):-
   NRound is NewRound+1,
   NTurn is NRound mod 2,
   bot_vs_bot(NBoard, NBot1, NBot2, Level1, Level2, NRound, NTurn).
-
 
 play_again_bot(Board, Piece,Round,Turn, Player, Bot, FirstPos, Level):-
   find_pos(Board,Piece,Position),
@@ -109,18 +107,18 @@ play_again_bot(Board, Piece,Round,Turn, Player, Bot, FirstPos, Level):-
     play_vs_bot(NewBoard, NPlayer, NBot, Round,Turn, Level))).
 
 
-  play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, FirstPos):-
-    NewRound is Round+1,
-    find_pos(NewBoard,Piece,Position),
-    possible_moves(Position,PossiblePlays),
-    (verify_more_plays(NewBoard,Position,Piece,PossiblePlays, FirstPos) ->
+play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, FirstPos):-
+  NewRound is Round+1,
+  find_pos(NewBoard,Piece,Position),
+  possible_moves(Position,PossiblePlays),
+  (verify_more_plays(NewBoard,Position,Piece,PossiblePlays, FirstPos) ->
     nl, write('You can make another movement with this piece! Do you want?'), nl,
     write('0 - No/1 - Yes'), nl,
     read(Answer),
-  ( Answer == 1 ->
-    another_move(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard),
-    play_again(NBoard, Piece, Round, Turn, NPlayer1, NPlayer2, FirstPos);
-  game(NewBoard, NewPlayer1, NewPlayer2, NewRound));
+    ( Answer == 1 ->
+      another_move(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard),
+      play_again(NBoard, Piece, Round, Turn, NPlayer1, NPlayer2, FirstPos);
+    game(NewBoard, NewPlayer1, NewPlayer2, NewRound));
   game(NewBoard, NewPlayer1, NewPlayer2, NewRound)  ).
 
 
@@ -136,14 +134,14 @@ another_move(Board, Piece, Round, Turn, Player1, Player2, NPlayer1, NPlayer2, NB
 
 % pede a peça que se quer mover e a posição de destino
 ask_for_movement(Piece, Position, Player,Board):-
-repeat,
-  ask_piece(Piece),
-  find_pos(Board,Piece,Pos),
-  possible_moves(Pos,PossiblePlays),
-(  verify_more_plays(Board,Position,Piece,PossiblePlays)->
-  verify_piece(Piece, Player),
-  ask_position(Position);
-  nl, write( 'Choose a piece with possible plays!'),nl).
+  repeat,
+    ask_piece(Piece),
+    find_pos(Board,Piece,Pos),
+    possible_moves(Pos,PossiblePlays),
+    (verify_more_plays(Board,Position,Piece,PossiblePlays)->
+      verify_piece(Piece, Player),
+      ask_position(Position);
+      nl, write( 'Choose a piece with possible plays!'),nl).
 
 ask_piece(Piece):-
   nl, write('Choose a piece to move: '),
@@ -206,7 +204,6 @@ get_piece_between(Board, Piece, 40, CapturedPiece, CapturedPiecePos):-
   !, CapturedPiece \= 0,
   CapturedPiecePos = 50.
 
-
 % verifica se existe uma peça entre as posições e se sim devolve-a
 get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos):-
   find_pos(Board, Piece, Pos),
@@ -266,7 +263,7 @@ verify_more_plays(Board,Position,Piece,[S|E],PosMove,_):-
   verify_more_plays(Board,Position,Piece,E,PosMove,_).
 
 check_game_over(Board, Player1, Player2):-
-  ( \+ isnt_game_over(Board,Player1);
+  (\+ isnt_game_over(Board,Player1);
   \+ isnt_game_over(Board,Player2)) ->
     (Score = 0,
     write('Player BLUE_RED score: '),
@@ -278,23 +275,18 @@ check_game_over(Board, Player1, Player2):-
       FinalScore2 < FinalScore1 ->
         nl, nl, write('PLAYER YELLOW_GREEN WON!!!');
         nl, nl, write('IT\'S A TIE!')),
-    display_quit,
-    abort).
+        display_quit,
+        abort).
   check_game_over(_, _, _).
-
-
 
 isnt_game_over(_,[]):-
   !, nl, write('FINISH!'), nl, nl, fail.
-
 %recieve a player and verifies if he has any possible play
 isnt_game_over(Board,[H|T]):-
   (find_pos(Board,H,Position),
   possible_moves(Position,List),
   verify_more_plays(Board,Position,H,List));
   isnt_game_over(Board,T).
-
-
 
 calculate_score([],_,Score, FinalScore):-
   FinalScore = Score,
@@ -321,9 +313,7 @@ bot_play(Board,[H|T],Player,Bot,NewPlayer,NewBot,NBoard, 0):-
   update_player(Player, Bot, CapturedPiece, NewPlayer, NewBot));
   bot_play(Board,T,Player,Bot,NewPlayer,NewBot,NBoard, 0).
 
-
 dumb_list([],_,[]).
-%smart
 dumb_list([H|T],Board,[H | NewPieces_List]):-
   find_pos(Board,H,Position),
   possible_moves(Position,PossiblePlays),
@@ -334,7 +324,6 @@ dumb_list([H|T],Board,[H | NewPieces_List]):-
     dumb_list(T,Board,NewPieces_List).
 
 create_list_plays([],_,_,[],[],[]).
-
 create_list_plays([H|T],Board,Bot,[PosMove | NewList],[NewValue | NewValues_List],[H | NewPieces_List]):-
   find_pos(Board,H,Position),
   possible_moves(Position,PossiblePlays),
@@ -347,23 +336,21 @@ create_list_plays([H|T],Board,Bot,NewList,NewValues_List,NewPieces_List):-
   create_list_plays(T,Board,Bot,NewList,NewValues_List,NewPieces_List).
 
 atribute_value_play(Board,Piece,PositionPlay,CapturedPiece,Bot,Value,NewValue):-
-find_pos(Board,Piece,Position),
-(member(CapturedPiece,Bot)->
-  N2Value is Value +2;
-N2Value= Value),
-piece_color(Piece,C1),
-color(PositionPlay,C2),
-(C1==C2 -> NewValue is N2Value + 1;
-NewValue is N2Value +3).
+  find_pos(Board,Piece,Position),
+  (member(CapturedPiece,Bot)->
+    N2Value is Value +2;
+    N2Value= Value),
+  piece_color(Piece,C1),
+  color(PositionPlay,C2),
+  (C1==C2 ->
+    NewValue is N2Value + 1;
+    NewValue is N2Value +3).
 
 get_max_play([],[],[],[],FinalPosition,Piece).
-
 get_max_play([H|T],[C|F],[X|Y],Values_List,FinalPosition,Piece):-
-(max_member(H,Values_List)->FinalPosition=C,
-Piece=X;
-get_max_play(T,F,Y,Values_List,FinalPosition,Piece)).
-
-
+  (max_member(H,Values_List)->FinalPosition=C,
+  Piece=X;
+  get_max_play(T,F,Y,Values_List,FinalPosition,Piece)).
 
 bot_play(Board,Pieces,Player,Bot,NewPlayer,NewBot,NewBoard, 1):-
   create_list_plays(Pieces,Board,Bot,NewList,NewValues_list,NewPieces_list),
