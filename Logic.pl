@@ -304,7 +304,6 @@ calculate_score([p(_, _)|T], Player,Score, FinalScore):-
 
 %dumb
 bot_play(Board,[H|T],Player,Bot,NewPlayer,NewBot,NBoard, 0):-
-  %dumb_list(Pieces,Board,NewPieces_list),
   (find_pos(Board,H,Position),
   possible_moves(Position,List),
   verify_more_plays(Board,Position,H,List,PosMove,0),
@@ -313,15 +312,6 @@ bot_play(Board,[H|T],Player,Bot,NewPlayer,NewBot,NBoard, 0):-
   update_player(Player, Bot, CapturedPiece, NewPlayer, NewBot));
   bot_play(Board,T,Player,Bot,NewPlayer,NewBot,NBoard, 0).
 
-dumb_list([],_,[]).
-dumb_list([H|T],Board,[H | NewPieces_List]):-
-  find_pos(Board,H,Position),
-  possible_moves(Position,PossiblePlays),
-  verify_more_plays(Board,Position,H,PossiblePlays,PosMove,0),
-  dumb_list(T,Board,NewPieces_List).
-
-  dumb_list([H|T],Board, NewPieces_List):-
-    dumb_list(T,Board,NewPieces_List).
 
 create_list_plays([],_,_,[],[],[]).
 create_list_plays([H|T],Board,Bot,[PosMove | NewList],[NewValue | NewValues_List],[H | NewPieces_List]):-
