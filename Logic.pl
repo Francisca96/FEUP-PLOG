@@ -285,6 +285,6 @@ dumbot_play(Board,[H|T],Player,Bot,NewPlayer,NewBot,NewBoard):-
   possible_moves(Position,List),
   verify_more_plays(Board,Position,H,List,PosMove,0),
   get_piece_between(Board, H, PosMove, CapturedPiece, CapturedPiecePos),
-  update_board(Board, H, Position, CapturedPiece, CapturedPiecePos, NewBoard),
+  update_board(Board, H, PosMove, CapturedPiece, CapturedPiecePos, NewBoard),
   update_player(Player, Bot, CapturedPiece, NewPlayer, NewBot));
   dumbot_play(NewBoard,T,Player,Bot,NewPlayer,NewBot,NewBoard).
