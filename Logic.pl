@@ -19,7 +19,7 @@ initialize_board(Board):-
           p(p35, 35),p(p36, 36),p(p37, 37),
           p(p31, 31),p(p32, 32),p(p33, 33),p(p34, 34)].
 
-% predicado para substituir peças e posiçoes no tabuleiro
+% predicado para substituir pecas e posicoes no tabuleiro
 substitute(_, _, [], []).
 substitute(X, Y, [X|R], [Y|R]).
 substitute(X, Y, [Z|R1], [Z|R2]):-
@@ -132,7 +132,7 @@ another_move(Board, Piece, Round, Turn, Player1, Player2, NPlayer1, NPlayer2, NB
   update_player(Player1, Player2, CapturedPiece, NPlayer1, NPlayer2),
   displays(Round, NPlayer1, NPlayer2, NBoard, Turn).
 
-% pede a peça que se quer mover e a posição de destino
+% pede a peca que se quer mover e a posicao de destino
 ask_for_movement(Piece, Position, Player,Board):-
   repeat,
     ask_piece(Piece),
@@ -146,7 +146,7 @@ ask_for_movement(Piece, Position, Player,Board):-
 ask_piece(Piece):-
   nl, write('Choose a piece to move: '),
   read(X),
-  symbol(Piece, X),!. % Vou buscar o nome da peça através do simbolo
+  symbol(Piece, X),!. % Vou buscar o nome da peca atraves do simbolo
 ask_piece(_):-
   nl, write('Invalid piece!'), nl,
   ask_piece(_),!.
@@ -159,18 +159,18 @@ ask_position(_):-
   nl, write('Invalid position!'), nl,
   ask_position(_).
 
-% verifica se a peça é do jogador
+% verifica se a peca e do jogador
 verify_piece(Piece, Player):-
   member(Piece, Player),!.
 verify_piece(_, _):-
   nl, write('This piece isn\'t yours!'), nl,
   fail.
 
-% verifica se a posição está vazia
+% verifica se a posicao esta vazia
 verify_empty_pos(Position, Board):-
 	member(p(0, Position), Board).
 
-% verifica se as posições não sao adjacentes
+% verifica se as posicoes nao sao adjacentes
 verify_next_pos(Board, Piece, Position):-
   find_pos(Board, Piece, Pos),
   possible_moves(Pos, List),
@@ -204,7 +204,7 @@ get_piece_between(Board, Piece, 40, CapturedPiece, CapturedPiecePos):-
   !, CapturedPiece \= 0,
   CapturedPiecePos = 50.
 
-% verifica se existe uma peça entre as posições e se sim devolve-a
+% verifica se existe uma peca entre as posicoes e se sim devolve-a
 get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos):-
   find_pos(Board, Piece, Pos),
   adj_pos(Pos, List1),
@@ -214,7 +214,7 @@ get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos):-
   find_pos(Board, CapturedPiece, CapturedPiecePos),
   !, CapturedPiece \= 0.
 
-% altera a posição que tinha peça e a posição para onde foi a peça
+% altera a posicao que tinha peca e a posicao para onde foi a peca
 update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard):-
   find_pos(Board, Piece, Pos1),
   substitute(p(Piece, Pos1), p(0, Pos1), Board, NewBoard1),
@@ -229,11 +229,11 @@ update_player(Player1, Player2, CapturedPiece, NewPlayer1, NewPlayer2):-
   delete(Player2, CapturedPiece, NewPlayer2),
   NewPlayer1 = Player1.
 
-% devolve a posição onde está a peça
+% devolve a posicao onde esta a peca
 find_pos(Board, Piece, Position):-
   member(p(Piece,Position), Board).
 
-%verifica se com umda dada peça ainda existem mais jogadas possíveis
+%verifica se com uma da dada peca ainda existem mais jogadas possiveis
 %a lista [S|E] tem que ser passada usando possible_moves(Position,PossiblePlays),
 verify_more_plays(_,_,_,[]):-
   !,fail.
@@ -281,7 +281,7 @@ check_game_over(Board, Player1, Player2):-
 
 isnt_game_over(_,[]):-
   !, nl, write('FINISH!'), nl, nl, fail.
-%recieve a player and verifies if he has any possible play
+%recebe um jogador e verifica se tem jogadas possiveis
 isnt_game_over(Board,[H|T]):-
   (find_pos(Board,H,Position),
   possible_moves(Position,List),
@@ -342,6 +342,7 @@ get_max_play([H|T],[C|F],[X|Y],Values_List,FinalPosition,Piece):-
   Piece=X;
   get_max_play(T,F,Y,Values_List,FinalPosition,Piece)).
 
+%smart
 bot_play(Board,Pieces,Player,Bot,NewPlayer,NewBot,NewBoard, 1):-
   create_list_plays(Pieces,Board,Bot,NewList,NewValues_list,NewPieces_list),
   get_max_play(NewValues_list,NewList,NewPieces_list,NewValues_list,FinalPosition,Piece),
