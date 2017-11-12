@@ -75,7 +75,7 @@ play_vs_bot(Board,Player,Bot,Round, Turn, Level):-
   FirstPos = Pos,
   (verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
     displays(Round, NewPlayer, NewBot, NewBoard, Turn),
-  play_again_bot(NewBoard, Piece,NewRound, Turn, NewPlayer, NewBot, NBoard, FirstPos, Level);
+  play_again_bot(NewBoard, Piece,NewRound, Turn, NewPlayer, NewBot, FirstPos, Level);
   !, bot_play(NewBoard,NewBot,NewPlayer,NewBot,NPlayer,NBot,NBoard, Level),
   play_vs_bot(NBoard, NPlayer, NBot, NewRound,Turn, Level)).
 
@@ -355,4 +355,4 @@ get_max_play(T,F,Values_List,FinalPosition)).
 
 bot_play(Board,Pieces,Player,Bot,NewPlayer,NewBot,NBoard, 1):-
   create_list_plays(Pieces,Board,Bot,List,Values_list),
-  get_max_play(Values_list,List,Values_list,FinalPosition);
+  get_max_play(Values_list,List,Values_list,FinalPosition).
