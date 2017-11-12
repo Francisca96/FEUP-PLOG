@@ -41,8 +41,7 @@ menu(2):-
 %  read(Level),
   initialize_board(Board),
   initialize_players(Player, Bot),
-  displays(0, Player, Bot, Board, 1),
-  play_vs_bot(Board, Player, Bot, 1,1).
+  play_vs_bot(Board, Player, Bot, 1, 1).
 
 menu(3):-
   write('Choose 1st Bot Level:'), nl,

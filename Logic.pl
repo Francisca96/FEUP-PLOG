@@ -32,15 +32,6 @@ displays(Round, Player1, Player2, Board, Turn):-
   display_players(Player1, Player2),
   display_board(Board).
 
-game(Board, Player1, Player2, Round):-
-  Turn is Round mod 2,
-  displays(Round, Player1, Player2, Board, Turn),
-  Turn == 1 ->
-    (Player = Player1,
-    play(Board, Player1, Player2, Player, Round, Turn));
-    (Player = Player2,
-    play(Board, Player1, Player2, Player, Round, Turn)).
-
 % inicio da jogada
 play(Board, Player1, Player2, Player, Round, Turn):-
   ask_for_movement(Piece, Position, Player,Board),
@@ -60,22 +51,21 @@ play(Board, Player1, Player2, Player, Round, Turn):-
     game(NewBoard, NewPlayer1, NewPlayer2, NewRound)).
 
 
-
     play_vs_bot(Board,Player,Bot,Round, Turn):-
+      displays(Round, Player, Bot, Board, Turn),
       ask_for_movement(Piece, Position, Player,Board),
       verify_empty_pos(Position, Board),
       verify_next_pos(Board, Piece, Position),
       get_piece_between(Board, Piece, Position, CapturedPiece, CapturedPiecePos),
       update_board(Board, Piece, Position, CapturedPiece, CapturedPiecePos, NewBoard),
       update_player(Player, Bot, CapturedPiece, NewPlayer, NewBot),
-      displays(Round, NewPlayer, NewBot, NewBoard, Turn),
       check_game_over(Board, NewPlayer, NewBot),
       NewRound is Round+2,
-      possible_moves(Position,PossiblePlays),
-    %  (verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
-      %  play_again(NewBoard, Piece, Round, Turn, NewPlayer, NewBot, NPlayer1, NPlayer2, NBoard, FirstPos);
-        dumbot_play(NewBoard,NewBot,NewPlayer,NewBot,NPlayer,NBot,Board),
-        play_vs_bot(Board, NPlayer, NBot, NewRound,1).
+      %possible_moves(Position,PossiblePlays),
+      %(verify_more_plays(NewBoard,Position,Piece,PossiblePlays) ->
+      %play_again(NewBoard, Piece, Round, Turn, NewPlayer, NewBot, NPlayer1, NPlayer2, NBoard, FirstPos);
+      !, dumbot_play(NewBoard,NewBot,NewPlayer,NewBot,NPlayer,NBot,NBoard),
+      play_vs_bot(NBoard, NPlayer, NBot, NewRound,Turn).
 
 
   play_again(NewBoard, Piece, Round, Turn, NewPlayer1, NewPlayer2, NPlayer1, NPlayer2, NBoard, FirstPos):-
