@@ -38,26 +38,24 @@ menu(2):-
   initialize_board(Board),
   initialize_players(Player, Bot),
   write('Choose Bot Level:'), nl,
-  write('1 - Easy'), nl,
-  write('2 - Hard'), nl,
+  write('0 - Easy'), nl,
+  write('1 - Hard'), nl,
   read(Level),
-  (Level == 1 ->
-    play_vs_bot(Board, Player, Bot, 1, 1, 0);
-    play_vs_bot(Board, Player, Bot, 1, 1, 1)).
+  play_vs_bot(Board, Player, Bot, 1, 1, Level).
 
 
 menu(3):-
+  initialize_board(Board),
+  initialize_players(Bot1, Bot2),
   write('Choose 1st Bot Level:'), nl,
-  write('1 - Easy'), nl,
-  write('2 - Hard'), nl,
+  write('0 - Easy'), nl,
+  write('1 - Hard'), nl,
   read(Level1), nl,
   write('Choose 2nd Bot Level:'), nl,
-  write('1 - Easy'), nl,
-  write('2 - Hard'), nl,
+  write('0 - Easy'), nl,
+  write('1 - Hard'), nl,
   read(Level2),
-  initialize_board(Board).
-  %initialize_players(Player1, Player2),
-  %game(Board, Player1, Player2, 1).
+  bot_vs_bot(Board, Bot1, Bot2, Level1, Level2, 1).
 
 menu(4):-
   display_how_to_play.
