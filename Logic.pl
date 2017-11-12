@@ -80,12 +80,12 @@ play_vs_bot(Board,Player,Bot,Round, Turn, Level):-
 
 bot_vs_bot(Board, Bot1, Bot2, Level1, Level2, Round, Turn):-
   check_game_over(Board, Bot1, Bot2),
-  bot_play(Board, Bot1, Bot2, Bot1, NewBot1, NewBot2, NewBoard, Level1),
-  displays(Round, NewBot2, NewBot1, NewBoard, Turn),
+  bot_play(Board, Bot1, Bot1, Bot2, NewBot1, NewBot2, NewBoard, Level1),
+  displays(Round, NewBot1, NewBot2, NewBoard, Turn),
   read(Enter),
   NewRound is Round+1,
   NewTurn is NewRound mod 2,
-  bot_play(NewBoard, NewBot1, NewBot2, NewBot1, NBot1, NBot2, NBoard, Level2),
+  bot_play(NewBoard, NewBot2, NewBot2, NewBot1, NBot2, NBot1, NBoard, Level2),
   displays(NewRound, NBot1, NBot2, NBoard, NewTurn),
   read(Enter),
   NRound is NewRound+1,
@@ -311,7 +311,8 @@ calculate_score([p(_, _)|T], Player,Score, FinalScore):-
   calculate_score(T,Player,Score, FinalScore).
 
 %dumb
-bot_play(Board,[H|T],Player,Bot,NewPlayer,NewBot,NBoard, 0):-
+bot_play(Board,Pieces,Player,Bot,NewPlayer,NewBot,NBoard, 0):-
+  %dumb_list(Pieces,Board,NewPieces_list),
   (find_pos(Board,H,Position),
   possible_moves(Position,List),
   verify_more_plays(Board,Position,H,List,PosMove,0),
@@ -320,7 +321,18 @@ bot_play(Board,[H|T],Player,Bot,NewPlayer,NewBot,NBoard, 0):-
   update_player(Player, Bot, CapturedPiece, NewPlayer, NewBot));
   bot_play(Board,T,Player,Bot,NewPlayer,NewBot,NBoard, 0).
 
+
+dumb_list([],_,[]).
 %smart
+dumb_list([H|T],Board,[H | NewPieces_List]):-
+  find_pos(Board,H,Position),
+  possible_moves(Position,PossiblePlays),
+  verify_more_plays(Board,Position,H,PossiblePlays,PosMove,0),
+  dumb_list(T,Board,NewPieces_List).
+
+  dumb_list([H|T],Board, NewPieces_List):-
+    dumb_list(T,Board,NewPieces_List).
+
 create_list_plays([],_,_,[],[],[]).
 
 create_list_plays([H|T],Board,Bot,[PosMove | NewList],[NewValue | NewValues_List],[H | NewPieces_List]):-
@@ -337,12 +349,12 @@ create_list_plays([H|T],Board,Bot,NewList,NewValues_List,NewPieces_List):-
 atribute_value_play(Board,Piece,PositionPlay,CapturedPiece,Bot,Value,NewValue):-
 find_pos(Board,Piece,Position),
 (member(CapturedPiece,Bot)->
-  NewValue is Value +2;
-NewValue is Value +1),
+  N2Value is Value +2;
+N2Value= Value),
 piece_color(Piece,C1),
 color(PositionPlay,C2),
-(C1==C2 -> NewValue is Value + 2;
-NewValue is Value +1).
+(C1==C2 -> NewValue is N2Value + 1;
+NewValue is N2Value +3).
 
 get_max_play([],[],[],[],FinalPosition,Piece).
 
