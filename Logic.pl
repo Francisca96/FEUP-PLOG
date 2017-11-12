@@ -84,7 +84,7 @@ bot_vs_bot(Board, Bot1, Bot2, Level1, Level2, Round, Turn):-
   read(Enter),
   NewRound is Round+1,
   NewTurn is NewRound mod 2,
-  bot_play(NewBoard, NewBot2, NewBot2, NewBot1, NBot2, NBot1, NBoard, Level2),
+  bot_play(NewBoard, NewBot2, NewBot1, NewBot2, NBot1, NBot2, NBoard, Level2),
   displays(NewRound, NBot1, NBot2, NBoard, NewTurn),
   read(Enter),
   NRound is NewRound+1,
@@ -319,9 +319,8 @@ dumb_list([H|T],Board,[H | NewPieces_List]):-
   possible_moves(Position,PossiblePlays),
   verify_more_plays(Board,Position,H,PossiblePlays,PosMove,0),
   dumb_list(T,Board,NewPieces_List).
-
-  dumb_list([H|T],Board, NewPieces_List):-
-    dumb_list(T,Board,NewPieces_List).
+dumb_list([H|T],Board, NewPieces_List):-
+  dumb_list(T,Board,NewPieces_List).
 
 create_list_plays([],_,_,[],[],[]).
 create_list_plays([H|T],Board,Bot,[PosMove | NewList],[NewValue | NewValues_List],[H | NewPieces_List]):-
