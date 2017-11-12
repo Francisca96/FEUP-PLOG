@@ -55,7 +55,8 @@ menu(3):-
   write('0 - Easy'), nl,
   write('1 - Hard'), nl,
   read(Level2),
-  bot_vs_bot(Board, Bot1, Bot2, Level1, Level2, 1).
+  displays(1, Bot1, Bot2, Board, 1),
+  bot_vs_bot(Board, Bot1, Bot2, Level1, Level2, 1, 1).
 
 menu(4):-
   display_how_to_play.
