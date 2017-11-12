@@ -322,19 +322,20 @@ bot_play(Board,[H|T],Player,Bot,NewPlayer,NewBot,NBoard, 0):-
   bot_play(Board,T,Player,Bot,NewPlayer,NewBot,NBoard, 0).
 
 %smart
-create_list_plays([],Board,[],[]).
+create_list_plays([],_,_,[],[],[],_,_,_).
 
-create_list_plays([H|T],Board,Bot,List,Values_list):-
+create_list_plays([H|T],Board,Bot,List,Values_list,Pieces_list,NewList,NewValues_List,NewPieces_List):-
   find_pos(Board,H,Position),
   possible_moves(Position,PossiblePlays),
-  verify_more_plays(Board,Position,H,PossiblePlays,PosMove,0),
+  (verify_more_plays(Board,Position,H,PossiblePlays,PosMove,0)->
   append([PosMove],List,NewList),
   get_piece_between(Board, H, PosMove, CapturedPiece, CapturedPiecePos),
-  atribute_value_play(Board,H,PosMove,CapturedPiece,Bot,Value),
-  append([Value],Values_list,NewValues_List),
-  create_list_plays(T,Board,Bot,NewList,NewValues_List).
+  atribute_value_play(Board,H,PosMove,CapturedPiece,Bot,0,NewValue),
+  append([NewValue],Values_list,NewValues_List),
+  append([H],Pieces_list,NewPieces_List);
+  create_list_plays(T,Board,Bot,NewList,NewValues_List,NewPieces_List,_,_,_)).
 
-atribute_value_play(Board,Piece,PositionPlay,CapturedPiece,Bot,Value):-
+atribute_value_play(Board,Piece,PositionPlay,CapturedPiece,Bot,Value,NewValue):-
 find_pos(Board,Piece,Position),
 (member(CapturedPiece,Bot)->
   NewValue is Value +2;
@@ -342,17 +343,20 @@ NewValue is Value +1),
 piece_color(Piece,C1),
 color(PositionPlay,C2),
 (C1==C2 -> NewValue is Value + 2;
-NewValue is Value +1),
-Value=NewValue.
+NewValue is Value +1).
 
-get_max_play([],[],[],FinalPosition).
+get_max_play([],[],[],[],FinalPosition,Piece).
 
-get_max_play([H|T],[C|F],Values_List,FinalPosition):-
-(max_member(H,Values_List)->FinalPosition=C;
-get_max_play(T,F,Values_List,FinalPosition)).
+get_max_play([H|T],[C|F],[X|Y],Values_List,FinalPosition,Piece):-
+(max_member(H,Values_List)->FinalPosition=C,
+Piece=X;
+get_max_play(T,F,Y,Values_List,FinalPosition,Piece)).
 
 
 
-bot_play(Board,Pieces,Player,Bot,NewPlayer,NewBot,NBoard, 1):-
-  create_list_plays(Pieces,Board,Bot,List,Values_list),
-  get_max_play(Values_list,List,Values_list,FinalPosition).
+bot_play(Board,Pieces,Player,Bot,NewPlayer,NewBot,NewBoard, 1):-
+  create_list_plays(Pieces,Board,Bot,[],[],[],NewList,NewValues_list,NewPieces_list),
+  get_max_play(NewValues_list,NewList,NewPieces_list,NewValues_list,FinalPosition,Piece),
+  get_piece_between(Board,Piece,FinalPosition,CapturedPiece,CapturedPiecePos),
+  update_board(Board,Piece,FinalPosition,CapturedPiece,CapturedPiecePos,NewBoard),
+  update_player(Player,Bot,CapturedPiece,NewPlayer,NewBot).
