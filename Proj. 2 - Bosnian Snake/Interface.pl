@@ -1,10 +1,12 @@
-initialize_board(Board):-
-  Board=[i,0,0,0,0,0,
-        0,0,0,0,0,0,
-        0,0,0,0,0,0,
-        0,0,0,f,0,0,
-        0,0,0,0,0,0,
-        0,0,0,0,0,0].
+:- use_module(library(random)).
+
+initialize_board(0, []).
+initialize_board(Size, Board):-
+  Size > 0,
+  Size1 is Size-1,
+  random(0, 7, H),
+  Board = [H|T],
+  initialize_board(Size1, T).
 
 display_board(Board, Size):-
   display_line2(Size), nl,
@@ -22,8 +24,7 @@ display_line1(Tail, 0, NewBoard):-
   write('|').
 display_line1([H|Tail], Size, NewBoard):-
   write('| '),
-  symbol(H, Symbol),
-  write(Symbol),
+  write(H),
   write(' '),
   Size1 is Size - 1,
   display_line1(Tail, Size1, NewBoard).
@@ -36,4 +37,4 @@ display_line2(Size):-
 
 symbol(i, 'I').
 symbol(f, 'F').
-symbol(0, ' ').
+symbol(0, '  ').

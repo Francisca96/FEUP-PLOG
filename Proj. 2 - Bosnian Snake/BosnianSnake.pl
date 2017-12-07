@@ -3,5 +3,5 @@
 :- include('Interface.pl').
 
 main:-
-  initialize_board(Board),
+  initialize_board(36, Board),
   display_board(Board, 6).
