@@ -1,7 +1,13 @@
 :- use_module(library(clpfd)).
 :- use_module(library(lists)).
 :- include('Interface.pl').
+:- include('Board.pl').
 
-main:-
-  initialize_board(36, Board),
-  display_board(Board, 6).
+
+main(Size, Difficulty):-
+  TotalSize is Size*Size,
+  length(Board, TotalSize),
+  place_start_end(Board, TotalSize),
+  UsedCells = [1, TotalSize],
+  place_random_num(Board, TotalSize, Difficulty, UsedCells),
+  display_board(Board, Size).
