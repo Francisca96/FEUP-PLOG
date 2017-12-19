@@ -9,6 +9,6 @@ main(N):-
   define_board(Size, Board),
   constrain_init_final_cells(Board, Size),
   constrain_middle_cells(Board, Size, IRow1, ICol1, INum1),
-  %constrain_middle_cells(Board, Size, IRow2, ICol2, INum2),
+  constrain_middle_cells(Board, Size, IRow2, ICol2, INum2),
   labeling([], Board),
   write(Board).
