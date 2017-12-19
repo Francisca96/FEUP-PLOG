@@ -1,13 +1,11 @@
-:- use_module(library(clpfd)).
-:- use_module(library(lists)).
-:- include('Interface.pl').
-:- include('Board.pl').
+:- include('Constraints.pl').
 
+%puzzle(numero, dimensao, numeros de fora(linha numero), numeros de fora(coluna numero), numeros de dentro(linha coluna numero))
+puzzle(1, 6, [2-2, 5-1], [], [2-4-6, 5-3-6]).
 
-main(Size, Difficulty):-
-  TotalSize is Size*Size,
-  length(Board, TotalSize),
-  place_start_end(Board, TotalSize),
-  UsedCells = [1, TotalSize],
-  place_random_num(Board, TotalSize, Difficulty, UsedCells),
-  display_board(Board, Size).
+%N é o número do puzzle
+main(N):-
+  puzzle(N, Size, [ORow1-ONum1, ORow2-ONum2], [], [IRow1-ICol1-INum1, IRow2-ICol2-INum2]),
+  define_board(Size, Board),
+  constrain_init_final_cells(Board, Size),
+  write(Board).
