@@ -31,3 +31,12 @@ constrain_middle_cells(Board, Size, IRow, ICol, INum):-
                 nth1(Pos8, Board, Cell)), AdjCells),
   INum1 is 8-INum,
   global_cardinality(AdjCells, [1-INum, 0-INum1]).
+
+constrain_horizontal_lines(_,_,[]).
+constrain_horizontal_lines(Board,Size,[Row-Num|T]):-
+  N #>=0, N #<=Size,
+  Pos is (Row-1) *Size + N,
+  setof(Cell,(nth1(Pos,Board,Cell)),List),
+  Num1 is Size -Num,
+  global_cardinality(List,[1-Num,0-Num1]),
+  constrain_horizontal_lines(Board,Size,T).
