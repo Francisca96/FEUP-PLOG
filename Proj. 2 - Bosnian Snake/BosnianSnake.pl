@@ -10,6 +10,6 @@ main(N):-
   constrain_init_final_cells(Board, Size),
   constrain_middle_cells(Board, Size, IRow1, ICol1, INum1),
   constrain_middle_cells(Board, Size, IRow2, ICol2, INum2),
-  constrain_horizontal_lines(Board,Size,Horizontal_Constrains), 
+  constrain_horizontal_lines(Board,Size,HorizontalConstrains), 
   labeling([], Board),
   write(Board).
