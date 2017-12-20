@@ -14,24 +14,11 @@ constrain_init_final_cells(Board, Size):-
 constrain_middle_cells(_, _, []).
 constrain_middle_cells(Board, Size, [Row-Col-Num|T]):-
   MiddlePos is (Row-1)*Size+Col,
-  Pos1 is MiddlePos-Size,
-  Pos2 is MiddlePos+Size,
-  Pos3 is MiddlePos-1,
-  Pos4 is MiddlePos+1,
-  Pos5 is Pos1-1,
-  Pos6 is Pos1+1,
-  Pos7 is Pos2-1,
-  Pos8 is Pos2+1,
-  setof(Cell, (nth1(Pos1, Board, Cell);
-                nth1(Pos2, Board, Cell);
-                nth1(Pos3, Board, Cell);
-                nth1(Pos4, Board, Cell);
-                nth1(Pos5, Board, Cell);
-                nth1(Pos6, Board, Cell);
-                nth1(Pos7, Board, Cell);
-                nth1(Pos8, Board, Cell)), AdjCells),
+  get_direct_neighbors(Board, MiddlePos, Size, DirectNeighbors),
+  get_diagonal_neighbors(Board, MiddlePos, Size, DiagonalNeighbors),
+  append(DirectNeighbors, DiagonalNeighbors, Neighbors),
   Num1 is 8-Num,
-  global_cardinality(AdjCells, [1-Num, 0-Num1]),
+  global_cardinality(Neighbors, [1-Num, 0-Num1]),
   constrain_middle_cells(Board, Size, T).
 
 list_to_matrix([], _,[]).
@@ -65,3 +52,45 @@ constrain_horizontal_lines(Board,[Row-Num|T]):-
   nth1(Row,Board,Line),
   sum(Line,#=,Num),
   constrain_horizontal_lines(Board,T).
+
+conectivity(Board, Size):-
+  constrain_init_final_neighbors(Board, Size).
+
+/*constrain_neighbors([], _, _, _).
+constrain_neighbors([Cell|T], Size, Index, TotalSize):-
+  get_direct_neighbors(Index, DirectNeighbors),
+  get_diagonal_neighbors(Index, DiagonalNeighbors),
+  NextIndex is Index+1,
+  constrain_neighbors(T, Size, NextIndex, TotalSize).
+
+constrain_neighbors([Cell|T], Size, 1, TotalSize):-
+  Pos1=2,
+  Pos2 is 1+Size,
+  NextIndex is Index+1,
+  constrain_neighbors(T, Size, NextIndex, TotalSize).
+
+constrain_neighbors(Board, Size, TotalSize, TotalSize):-
+  get_direct_neighbors(Board,Index, DirectNeighbors),
+  get_diagonal_neighbors(Board,Index, DiagonalNeighbors),
+  NextIndex is Index+1,
+  constrain_neighbors(T, Size, NextIndex, TotalSize).*/
+
+get_direct_neighbors(Board, Index, Size, DirectNeighbors):-
+  Pos1 is Index-Size,
+  Pos2 is Index+Size,
+  Pos3 is Index-1,
+  Pos4 is Index+1,
+  setof(Cell, (nth1(Pos1, Board, Cell);
+                nth1(Pos2, Board, Cell);
+                nth1(Pos3, Board, Cell);
+                nth1(Pos4, Board, Cell)), DirectNeighbors).
+
+get_diagonal_neighbors(Board, Index, Size, DiagonalNeighbors):-
+  Pos1 is Index-Size-1,
+  Pos2 is Index+Size-1,
+  Pos3 is Index-Size+1,
+  Pos4 is Index+Size+1,
+  setof(Cell, (nth1(Pos1, Board, Cell);
+                nth1(Pos2, Board, Cell);
+                nth1(Pos3, Board, Cell);
+                nth1(Pos4, Board, Cell)), DiagonalNeighbors).
