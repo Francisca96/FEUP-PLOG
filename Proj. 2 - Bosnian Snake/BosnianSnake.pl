@@ -1,7 +1,7 @@
 :- include('Constraints.pl').
 
 %puzzle(numero, dimensao, numeros de fora(linha numero), numeros de fora(coluna numero), numeros de dentro(linha coluna numero))
-puzzle(1, 6, [2-2, 5-1], [], [5-2-6, 3-5-6]).
+puzzle(1, 6, [2-2, 5-1], [3-4], [5-2-6, 3-5-6]).
 
 %N é o número do puzzle
 main(N):-
@@ -16,4 +16,4 @@ main(N):-
   constrain_horizontal_lines(Board,HorizontalConstrains),
   constrain_vertical_lines(Board,VerticalConstrains),
   labeling([], List),
-  print(Board).
+  write(Board).

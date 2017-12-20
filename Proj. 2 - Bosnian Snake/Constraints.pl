@@ -56,7 +56,7 @@ constrain_middle_cells(Board, Size, IRow, ICol, INum):-
 
 constrain_vertical_lines(Board,[Col-Num|T]):-
   columnN(Board,Col,ColElems),
-  sum(Col,#=,Num),
+  sum(ColElems,#=,Num),
   constrain_vertical_lines(Board,T).
 
   constrain_vertical_lines(_,[]).
