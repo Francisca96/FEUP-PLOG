@@ -14,8 +14,4 @@ main(N):-
   constrain_horizontal_lines(Board,HorizontalConstraints),
   constrain_vertical_lines(Board,VerticalConstraints),
   labeling([], List),
-<<<<<<< HEAD
-  write(Board).
-=======
   display_board(Board).
->>>>>>> e228e89e8b0d600ee0f24dcdd6bdd188a8b5b092
