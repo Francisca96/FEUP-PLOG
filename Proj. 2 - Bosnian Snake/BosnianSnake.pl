@@ -13,6 +13,6 @@ main(N):-
 
 
   list_to_matrix(List,Size,Board),
-  %constrain_horizontal_lines(Board,HorizontalConstrains),
+  constrain_horizontal_lines(Board,HorizontalConstrains),
   labeling([], List),
   print(List).
