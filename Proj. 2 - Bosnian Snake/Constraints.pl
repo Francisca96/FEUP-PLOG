@@ -44,8 +44,22 @@ constrain_middle_cells(Board, Size, IRow, ICol, INum):-
         NSize is Size-1,
         list_to_matrix_row(List,NSize,Row,Tail).
 
+        rowN([H|_],1,H):-!.
+        rowN([_|T],I,X) :-
+            I1 is I-1,
+            rowN(T,I1,X).
 
+        columnN([],_,[]).
+        columnN([H|T], I, [R|X]):-
+           rowN(H, I, R),
+        columnN(T,I,X).
 
+constrain_vertical_lines(Board,[Col-Num|T]):-
+  columnN(Board,Col,ColElems),
+  sum(Col,#=,Num),
+  constrain_vertical_lines(Board,T).
+
+  constrain_vertical_lines(_,[]).
 
 constrain_horizontal_lines(Board,[Row-Num|T]):-
   nth1(Row,Board,Line),

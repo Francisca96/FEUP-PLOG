@@ -5,7 +5,7 @@ puzzle(1, 6, [2-2, 5-1], [], [5-2-6, 3-5-6]).
 
 %N é o número do puzzle
 main(N):-
-  puzzle(N, Size, HorizontalConstrains, [], [IRow1-ICol1-INum1, IRow2-ICol2-INum2]),
+  puzzle(N, Size, HorizontalConstrains, VerticalConstrains, [IRow1-ICol1-INum1, IRow2-ICol2-INum2]),
   define_board(Size, List),
   constrain_init_final_cells(List, Size),
   constrain_middle_cells(List, Size, IRow1, ICol1, INum1),
@@ -14,5 +14,6 @@ main(N):-
 
   list_to_matrix(List,Size,Board),
   constrain_horizontal_lines(Board,HorizontalConstrains),
+  constrain_vertical_lines(Board,VerticalConstrains),
   labeling([], List),
-  print(List).
+  print(Board).
