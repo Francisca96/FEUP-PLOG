@@ -53,8 +53,21 @@ constrain_horizontal_lines(Board,[Row-Num|T]):-
   sum(Line,#=,Num),
   constrain_horizontal_lines(Board,T).
 
-conectivity(Board, Size):-
-  constrain_init_final_neighbors(Board, Size).
+conectivity(Board, List, Size):-
+  constrain_init_final_neighbors(List, Size).
+
+constrain_init_final_neighbors(List, Size):-
+  TotalSize is Size*Size,
+  Pos1 is 2,
+  Pos2 is Size+1,
+  setof(Cell, (nth1(Pos1, List, Cell);
+                nth1(Pos2, List, Cell)), Cells),
+  global_cardinality(Cells, [1-1, 0-1]),
+  Pos3 is TotalSize-1,
+  Pos4 is TotalSize-Size,
+  setof(Cell1, (nth1(Pos3, List, Cell1);
+                nth1(Pos4, List, Cell1)), Cells1),
+  global_cardinality(Cells1, [1-1, 0-1]).
 
 /*constrain_neighbors([], _, _, _).
 constrain_neighbors([Cell|T], Size, Index, TotalSize):-
