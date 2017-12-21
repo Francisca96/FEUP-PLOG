@@ -14,6 +14,6 @@ main(N):-
   list_to_matrix(List,Size,Board),
   constrain_horizontal_lines(Board,HorizontalConstraints),
   constrain_vertical_lines(Board,VerticalConstraints),
-  conectivity(Board, List, Size),
+  conectivity(List, Size),
   labeling([], List),
   display_board(Board).
