@@ -133,8 +133,7 @@ constrain_cells_last_col(List, [Elem|Tail], Size):-
 constrain_first_line(List, Size):-
   Min is 2,
   Max is Size-1,
-  LineSize is Size-2,
-  %get_line(Min, Max, LineSize, Line),
+  get_line(List,Min, Max,Line),
   constrain_cells_first_line(List, Line, Size).
 
 constrain_cells_first_line(_, [], _).
@@ -153,8 +152,7 @@ constrain_last_line(List, Size):-
   TotalSize is Size*Size,
   Min is TotalSize-(Size-2),
   Max is Size*Size-1,
-  LineSize is Size-2,
-  %get_line(Min, Max, LineSize, Line),
+  get_line(List,Min, Max,Line),
   constrain_cells_last_line(List, Line, Size).
 
 constrain_cells_last_line(_, [], _).
