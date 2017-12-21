@@ -1,9 +1,15 @@
-get_line(List,Min, Max,Line):-
+get_line(Min, Max,Line):-
     Count is Max - Min +1,
     To is Min + Count - 1,
-    findall(E, (between(Min, To, I), nth1(I, List, E)), Line).
-%get_col(Min, Max, ColSize, Col)
-%get_middle_cells(List, Size, MiddleCells)
+    findall(I, (between(Min, To, I)), Line).
+
+
+get_col(Min, Max, Size,  Col):-
+  findall(I,( between(Min, Max, I), 0 is I mod Size),Col).
+
+
+  get_middle_cells(Min,Max, Size, MiddleCells):-
+    findall(I, (between(Min, Max,I),\+ 0 is I mod Size, \+ 0 is (I-1) mod Size),MiddleCells).
 
 get_direct_neighbors(Board, Index, Size, DirectNeighbors):-
   Pos1 is Index-Size,

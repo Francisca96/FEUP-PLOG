@@ -95,8 +95,7 @@ constrain_vertex(List, Size):-
 constrain_first_col(List, Size):-
   Min is Size+1,
   Max is Size*(Size-2)+1,
-  ColSize is Size-2,
-  %get_col(Min, Max, ColSize, Col),
+  get_col(Min, Max, Size, Col),
   constrain_cells_first_col(List, Col, Size).
 
 constrain_cells_first_col(_, [], _).
@@ -114,8 +113,7 @@ constrain_cells_first_col(List, [Elem|Tail], Size):-
 constrain_last_col(List, Size):-
   Min is 2*Size,
   Max is (Size-1)*Size,
-  ColSize is Size-2,
-  %get_col(Min, Max, ColSize, Col),
+  get_col(Min, Max,Size, Col),
   constrain_cells_last_col(List, Col, Size).
 
 constrain_cells_last_col(_, [], _).
@@ -133,7 +131,7 @@ constrain_cells_last_col(List, [Elem|Tail], Size):-
 constrain_first_line(List, Size):-
   Min is 2,
   Max is Size-1,
-  get_line(List,Min, Max,Line),
+  get_line(Min, Max,Line),
   constrain_cells_first_line(List, Line, Size).
 
 constrain_cells_first_line(_, [], _).
@@ -152,7 +150,7 @@ constrain_last_line(List, Size):-
   TotalSize is Size*Size,
   Min is TotalSize-(Size-2),
   Max is Size*Size-1,
-  get_line(List,Min, Max,Line),
+  get_line(Min, Max,Line),
   constrain_cells_last_line(List, Line, Size).
 
 constrain_cells_last_line(_, [], _).
@@ -168,7 +166,10 @@ constrain_cells_last_line(List, [Elem|Tail], Size):-
   constrain_cells_first_line(List, Tail, Size).
 
 constrain_middle(List, Size):-
-  %get_middle_cells(List, Size, MiddleCells),
+  TotalSize is Size * Size,
+  Min is 2 + Size,
+  Max is TotalSize - Size-1,
+  get_middle_cells(Min,Max, Size, MiddleCells),
   constrain_middle_cells(List, MiddleCells, Size).
 
 constrain_middle_cells(_, [], _).
