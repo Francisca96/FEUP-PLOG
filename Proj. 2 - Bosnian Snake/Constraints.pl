@@ -1,6 +1,3 @@
-:-use_module(library(clpfd)).
-:-use_module(library(lists)).
-
 define_board(Size, Board):-
   Length is Size*Size,
   length(Board, Length),
@@ -55,7 +52,12 @@ constrain_horizontal_lines(Board,[Row-Num|T]):-
 
 conectivity(List, Size):-
   constrain_init_final_neighbors(List, Size),
-  constrain_vertex(List, Size).
+  constrain_vertex(List, Size),
+  constrain_first_line(List, Size),
+  constrain_last_line(List, Size),
+  constrain_first_col(List, Size),
+  constrain_last_col(List, Size),
+  constrain_middle(List, Size).
 
 constrain_init_final_neighbors(List, Size):-
   TotalSize is Size*Size,
@@ -90,46 +92,97 @@ constrain_vertex(List, Size):-
   nth1(Pos6, List, DiagonalCell1),
   Elem2 #= 1 #=> Cell3 #= 1 #/\ Cell4 #= 1 #/\ DiagonalCell1 #= 0.
 
-/*constrain_neighbors([], _, _, _).
-constrain_neighbors([Cell|T], Size, Index, TotalSize):-
-  get_direct_neighbors(Index, DirectNeighbors),
-  get_diagonal_neighbors(Index, DiagonalNeighbors),
-  NextIndex is Index+1,
-  constrain_neighbors(T, Size, NextIndex, TotalSize).
+constrain_first_col(List, Size):-
+  Min is Size+1,
+  Max is Size*(Size-2)+1,
+  ColSize is Size-2,
+  %get_col(Min, Max, ColSize, Col),
+  constrain_cells_first_col(List, Col, Size).
 
-constrain_neighbors([Cell|T], Size, 1, TotalSize):-
-  Pos1=2,
-  Pos2 is 1+Size,
-  NextIndex is Index+1,
-  constrain_neighbors(T, Size, NextIndex, TotalSize).
+constrain_cells_first_col(_, [], _).
+constrain_cells_first_col(List, [Elem|Tail], Size):-
+  Pos1 is Elem-Size,
+  Pos2 is Elem+Size,
+  Pos3 is Elem+1,
+  setof(Cell, (nth1(Pos1, List, Cell);
+                nth1(Pos2, List, Cell);
+                nth1(Pos3, List, Cell)), Cells),
+  sum(Cells, #=, Sum),
+  Elem #= 1 #=> Sum #= 2,
+  constrain_cells_first_col(List, Tail, Size).
 
-constrain_neighbors(Board, Size, TotalSize, TotalSize):-
-  get_direct_neighbors(Board,Index, DirectNeighbors),
-  get_diagonal_neighbors(Board,Index, DiagonalNeighbors),
-  NextIndex is Index+1,
-  constrain_neighbors(T, Size, NextIndex, TotalSize).*/
+constrain_last_col(List, Size):-
+  Min is 2*Size,
+  Max is (Size-1)*Size,
+  ColSize is Size-2,
+  %get_col(Min, Max, ColSize, Col),
+  constrain_cells_last_col(List, Col, Size).
 
-get_direct_neighbors(Board, Index, Size, DirectNeighbors):-
-  Pos1 is Index-Size,
-  Pos2 is Index+Size,
-  Pos3 is Index-1,
-  Pos4 is Index+1,
-  setof(Cell, (nth1(Pos1, Board, Cell);
-                nth1(Pos2, Board, Cell);
-                nth1(Pos3, Board, Cell);
-                nth1(Pos4, Board, Cell)), DirectNeighbors).
+constrain_cells_last_col(_, [], _).
+constrain_cells_last_col(List, [Elem|Tail], Size):-
+  Pos1 is Elem-Size,
+  Pos2 is Elem+Size,
+  Pos3 is Elem-1,
+  setof(Cell, (nth1(Pos1, List, Cell);
+                nth1(Pos2, List, Cell);
+                nth1(Pos3, List, Cell)), Cells),
+  sum(Cells, #=, Sum),
+  Elem #= 1 #=> Sum #= 2,
+  constrain_cells_last_col(List, Tail, Size).
 
-get_diagonal_neighbors(Board, Index, Size, DiagonalNeighbors):-
-  Pos1 is Index-Size-1,
-  Pos2 is Index+Size-1,
-  Pos3 is Index-Size+1,
-  Pos4 is Index+Size+1,
-  setof(Cell, (nth1(Pos1, Board, Cell);
-                nth1(Pos2, Board, Cell);
-                nth1(Pos3, Board, Cell);
-                nth1(Pos4, Board, Cell)), DiagonalNeighbors).
+constrain_first_line(List, Size):-
+  Min is 2,
+  Max is Size-1,
+  LineSize is Size-2,
+  %get_line(Min, Max, LineSize, Line),
+  constrain_cells_first_line(List, Line, Size).
 
-%get_middle_cells([Row|_], Size, Size, []).
-%get_middle_cells([Row|T], 1, Size, []):-
-%  get_middle_cells([Row|T], 1, Size, []).
-%get_middle_cells([Row|T], Row, Size, MiddleCells):-
+constrain_cells_first_line(_, [], _).
+constrain_cells_first_line(List, [Elem|Tail], Size):-
+  Pos1 is Elem-1,
+  Pos2 is Elem+1,
+  Pos3 is Elem+Size,
+  setof(Cell, (nth1(Pos1, List, Cell);
+                nth1(Pos2, List, Cell);
+                nth1(Pos3, List, Cell)), Cells),
+  sum(Cells, #=, Sum),
+  Elem #= 1 #=> Sum #= 2,
+  constrain_cells_first_line(List, Tail, Size).
+
+constrain_last_line(List, Size):-
+  TotalSize is Size*Size,
+  Min is TotalSize-(Size-2),
+  Max is Size*Size-1,
+  LineSize is Size-2,
+  %get_line(Min, Max, LineSize, Line),
+  constrain_cells_last_line(List, Line, Size).
+
+constrain_cells_last_line(_, [], _).
+constrain_cells_last_line(List, [Elem|Tail], Size):-
+  Pos1 is Elem-1,
+  Pos2 is Elem+1,
+  Pos3 is Elem-Size,
+  setof(Cell, (nth1(Pos1, List, Cell);
+                nth1(Pos2, List, Cell);
+                nth1(Pos3, List, Cell)), Cells),
+  sum(Cells, #=, Sum),
+  Elem #= 1 #=> Sum #= 2,
+  constrain_cells_first_line(List, Tail, Size).
+
+constrain_middle(List, Size):-
+  %get_middle_cells(List, Size, MiddleCells),
+  constrain_middle_cells(List, MiddleCells, Size).
+
+constrain_middle_cells(_, [], _).
+constrain_middle_cells(List, [Elem|Tail], Size):-
+  Pos1 is Elem-Size,
+  Pos2 is Elem+Size,
+  Pos3 is Elem-1,
+  Pos4 is Elem+1,
+  setof(Cell, (nth1(Pos1, List, Cell);
+                nth1(Pos2, List, Cell);
+                nth1(Pos3, List, Cell);
+                nth1(Pos4, List, Cell)), Cells),
+  sum(Cells, #=, Sum),
+  Elem #= 1 #=> Sum #= 2,
+  constrain_middle_cells(List, Tail, Size).

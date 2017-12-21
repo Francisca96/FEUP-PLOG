@@ -1,5 +1,8 @@
+:-use_module(library(clpfd)).
+:-use_module(library(lists)).
 :- include('Constraints.pl').
 :- include('Interface.pl').
+:- include('Utilities.pl').
 
 %puzzle(numero, dimensao, numeros de fora(linha numero), numeros de fora(coluna numero), numeros de dentro(linha coluna numero))
 puzzle(1, 6, [2-2, 5-1], [], [5-2-6, 3-5-6]).
