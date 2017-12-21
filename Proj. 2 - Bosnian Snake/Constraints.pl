@@ -57,7 +57,7 @@ conectivity(List, Size):-
   constrain_last_line(List, Size),
   constrain_first_col(List, Size),
   constrain_last_col(List, Size),
-  constrain_middle(List, Size).
+  constrain_middle_connect(List, Size).
 
 constrain_init_final_neighbors(List, Size):-
   TotalSize is Size*Size,
@@ -91,6 +91,51 @@ constrain_vertex(List, Size):-
   nth1(Pos5, List, Cell4),
   nth1(Pos6, List, DiagonalCell1),
   Elem2 #= 1 #=> Cell3 #= 1 #/\ Cell4 #= 1 #/\ DiagonalCell1 #= 0.
+
+% constrainBoard([],Size,Size,Size).
+%
+%
+% constrainBoard([H|T],Line,Col,Size):-
+%   constrainLine(H,Line,Col,Size)
+%
+%
+% constraiLine(Row,1,1,Size):-
+%   constrainLine(Row,1,2,Size).
+%
+%   constraiLine
+%
+%
+% gelAdjacentElements(Board,Line,Column,Elems):-
+%   findall(L-C, adjacent(Line,Column,L,C),Temp),
+%   getElem(Board, Temp, Elemns).
+%
+% getElem(Board,[Line-Column|T],[Head|Tail]):-
+%   nth1(Line,Board,Temp),
+%   nth1(Colum,Temp,Head),
+%   getElem(Board,T,Tail).
+%
+%
+%   getElem(Board, [_,T],Elems):-
+%     getElem(Board,T,Elems).
+%
+%     getElem(_,[],[]).
+%
+% adjacent(Line,Col,L,C):-
+%   L is Line -1,
+%   C is Col.
+%   adjacent(Line,Col,L,C):-
+%     L is Line +1,
+%     C is Col.
+%
+%   adjacent(Line,Col,L,C):-
+%       L is Line,
+%       C is Col-1.
+%
+%   adjacent(Line,Col,L,C):-
+%         L is Line,
+%         C is Col + 1.
+
+
 
 constrain_first_col(List, Size):-
   Min is Size+1,
@@ -172,8 +217,8 @@ constrain_middle(List, Size):-
   get_middle_cells(Min,Max, Size, MiddleCells),
   constrain_middle_cells(List, MiddleCells, Size).
 
-constrain_middle_cells(_, [], _).
-constrain_middle_cells(List, [Elem|Tail], Size):-
+constrain_middle_cells_connect(_, [], _).
+constrain_middle_cells_connect(List, [Elem|Tail], Size):-
   Pos1 is Elem-Size,
   Pos2 is Elem+Size,
   Pos3 is Elem-1,
@@ -184,4 +229,4 @@ constrain_middle_cells(List, [Elem|Tail], Size):-
                 nth1(Pos4, List, Cell)), Cells),
   sum(Cells, #=, Sum),
   Elem #= 1 #=> Sum #= 2,
-  constrain_middle_cells(List, Tail, Size).
+  constrain_middle_cells_connect(List, Tail, Size).

@@ -4,6 +4,9 @@ get_line(Min, Max,Line):-
     findall(I, (between(Min, To, I)), Line).
 
 
+get_col(1,Max,Size,Col):-
+  findall(I,( between(1, Max, I), 0 is (I-1) mod Size),Col).
+  
 get_col(Min, Max, Size,  Col):-
   findall(I,( between(Min, Max, I), 0 is I mod Size),Col).
 
