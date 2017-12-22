@@ -13,6 +13,11 @@ puzzle(1, 6, [2-2, 5-1], [], [5-2-6, 3-5-6]).
 puzzle(2, 8, [2-2, 5-1], [7-3], [2-2-4, 7-6-5]).
 puzzle(3, 13, [2-4, 5-1,6-1], [7-3], [2-2-4, 7-6-5, 10-10-3]).
 
+
+solve_generated_board(Size,MiddleRestricions,HorizontalRestrictions,VerticalRestrictions):-
+  repeat,
+  generateBoard(Size,MiddleRestricions,HorizontalRestrictions,VerticalRestrictions,NPuzzle),
+  main(NPuzzle),!.
 %N é o número do puzzle
 main(N):-
   reset_timer,
