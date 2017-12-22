@@ -5,6 +5,8 @@
 :- include('Utilities.pl').
 :- include('Conectivity.pl').
 :- use_module(library(between)).
+:-include('GenerateBoards.pl').
+:-dynamic puzzle/5.
 
 %puzzle(numero, dimensao, numeros de fora(linha numero), numeros de fora(coluna numero), numeros de dentro(linha coluna numero))
 puzzle(1, 6, [2-2, 5-1], [], [5-2-6, 3-5-6]).
