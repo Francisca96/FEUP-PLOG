@@ -11,6 +11,8 @@ constrain_init_final_cells(Board, Size):-
 constrain_middle_cells(_, _, []).
 constrain_middle_cells(Board, Size, [Row-Col-Num|T]):-
   MiddlePos is (Row-1)*Size+Col,
+  nth1(MiddlePos,Board,El),
+  El#=0,
   get_direct_neighbors(Board, MiddlePos, Size, DirectNeighbors),
   get_diagonal_neighbors(Board, MiddlePos, Size, DiagonalNeighbors),
   append(DirectNeighbors, DiagonalNeighbors, Neighbors),
@@ -53,11 +55,11 @@ constrain_horizontal_lines(Board,[Row-Num|T]):-
 conectivity(List, Size):-
   constrain_init_final_neighbors(List, Size),
   constrain_vertex(List, Size),
-  constrain_first_line(List, Size),
   constrain_last_line(List, Size),
+  constrain_first_line(List, Size),
   constrain_first_col(List, Size),
   constrain_last_col(List, Size),
-  constrain_middle_connect(List, Size).
+ constrain_middle(List, Size).
 
 constrain_init_final_neighbors(List, Size):-
   TotalSize is Size*Size,
@@ -152,7 +154,8 @@ constrain_cells_first_col(List, [Elem|Tail], Size):-
                 nth1(Pos2, List, Cell);
                 nth1(Pos3, List, Cell)), Cells),
   sum(Cells, #=, Sum),
-  Elem #= 1 #=> Sum #= 2,
+  nth1(Elem,List,Cell1),
+  Cell1 #= 1 #=> Sum #= 2,
   constrain_cells_first_col(List, Tail, Size).
 
 constrain_last_col(List, Size):-
@@ -170,7 +173,8 @@ constrain_cells_last_col(List, [Elem|Tail], Size):-
                 nth1(Pos2, List, Cell);
                 nth1(Pos3, List, Cell)), Cells),
   sum(Cells, #=, Sum),
-  Elem #= 1 #=> Sum #= 2,
+  nth1(Elem,List,Cell1),
+  Cell1 #= 1 #=> Sum #= 2,
   constrain_cells_last_col(List, Tail, Size).
 
 constrain_first_line(List, Size):-
@@ -188,7 +192,8 @@ constrain_cells_first_line(List, [Elem|Tail], Size):-
                 nth1(Pos2, List, Cell);
                 nth1(Pos3, List, Cell)), Cells),
   sum(Cells, #=, Sum),
-  Elem #= 1 #=> Sum #= 2,
+  nth1(Elem,List,Cell1),
+  Cell1 #= 1 #=> Sum #= 2,
   constrain_cells_first_line(List, Tail, Size).
 
 constrain_last_line(List, Size):-
@@ -207,7 +212,8 @@ constrain_cells_last_line(List, [Elem|Tail], Size):-
                 nth1(Pos2, List, Cell);
                 nth1(Pos3, List, Cell)), Cells),
   sum(Cells, #=, Sum),
-  Elem #= 1 #=> Sum #= 2,
+  nth1(Elem,List,Cell1),
+  Cell1 #= 1 #=> Sum #= 2,
   constrain_cells_first_line(List, Tail, Size).
 
 constrain_middle(List, Size):-
@@ -215,7 +221,7 @@ constrain_middle(List, Size):-
   Min is 2 + Size,
   Max is TotalSize - Size-1,
   get_middle_cells(Min,Max, Size, MiddleCells),
-  constrain_middle_cells(List, MiddleCells, Size).
+  constrain_middle_cells_connect(List, MiddleCells, Size).
 
 constrain_middle_cells_connect(_, [], _).
 constrain_middle_cells_connect(List, [Elem|Tail], Size):-
@@ -228,5 +234,6 @@ constrain_middle_cells_connect(List, [Elem|Tail], Size):-
                 nth1(Pos3, List, Cell);
                 nth1(Pos4, List, Cell)), Cells),
   sum(Cells, #=, Sum),
-  Elem #= 1 #=> Sum #= 2,
+  nth1(Elem,List,Cell1),
+  Cell1 #= 1 #=> Sum #= 2,
   constrain_middle_cells_connect(List, Tail, Size).

@@ -4,9 +4,10 @@ get_line(Min, Max,Line):-
     findall(I, (between(Min, To, I)), Line).
 
 
-get_col(1,Max,Size,Col):-
-  findall(I,( between(1, Max, I), 0 is (I-1) mod Size),Col).
-  
+get_col(Min,Max,Size,Col):-
+  Min is Size +1,
+  findall(I,( between(Min, Max, I), 0 is (I-1) mod Size),Col).
+
 get_col(Min, Max, Size,  Col):-
   findall(I,( between(Min, Max, I), 0 is I mod Size),Col).
 
@@ -33,3 +34,12 @@ get_diagonal_neighbors(Board, Index, Size, DiagonalNeighbors):-
                 nth1(Pos2, Board, Cell);
                 nth1(Pos3, Board, Cell);
                 nth1(Pos4, Board, Cell)), DiagonalNeighbors).
+
+
+
+                reset_timer :- statistics(walltime,_).
+
+                print_time :-
+                	statistics(walltime,[_,T]),
+                	TS is ((T//10)*10)/1000,
+                  nl, write('Solution Time: '), write(TS), write('s'), nl, nl.

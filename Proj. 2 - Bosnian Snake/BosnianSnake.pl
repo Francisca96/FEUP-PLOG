@@ -12,6 +12,7 @@ puzzle(2, 8, [2-2, 5-1], [7-3], [2-2-4, 7-6-5]).
 
 %N é o número do puzzle
 main(N):-
+  reset_timer,
   puzzle(N, Size, HorizontalConstraints, VerticalConstraints, MiddleConstraints),
   define_board(Size, List),
   constrain_init_final_cells(List, Size),
@@ -21,4 +22,6 @@ main(N):-
   constrain_vertical_lines(Board,VerticalConstraints),
   conectivity(List, Size),
   labeling([], List),
+  print_time,
+  fd_statistics,
   display_board(Board).
