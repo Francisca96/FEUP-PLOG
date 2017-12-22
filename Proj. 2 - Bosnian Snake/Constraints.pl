@@ -199,7 +199,7 @@ constrain_cells_first_line(List, [Elem|Tail], Size):-
 constrain_last_line(List, Size):-
   TotalSize is Size*Size,
   Min is TotalSize-(Size-2),
-  Max is Size*Size-1,
+  Max is TotalSize-1,
   get_line(Min, Max,Line),
   constrain_cells_last_line(List, Line, Size).
 
@@ -214,7 +214,7 @@ constrain_cells_last_line(List, [Elem|Tail], Size):-
   sum(Cells, #=, Sum),
   nth1(Elem,List,Cell1),
   Cell1 #= 1 #=> Sum #= 2,
-  constrain_cells_first_line(List, Tail, Size).
+  constrain_cells_last_line(List, Tail, Size).
 
 constrain_middle(List, Size):-
   TotalSize is Size * Size,
