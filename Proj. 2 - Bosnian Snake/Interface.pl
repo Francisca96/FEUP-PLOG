@@ -1,4 +1,131 @@
-display_board([]).
-display_board([H|T]):-
-  write(H), nl,
-  display_board(T).
+final_display([H|T],Row,Col,HorizontalConstraints,VerticalConstraints,MiddleConstraints,Size):-
+  nl,
+  write('     '),
+  display_col(VerticalConstraints,Size,1),nl,
+  display_board([H|T],Row,Col,MiddleConstraints,HorizontalConstraints,Size),
+  display_line(Size).
+
+display_board([],_,_,_,_,_).
+display_board([H|T],Row,Col,MiddleConstraints,[Row1-Number|Tail],Size):-
+      Row==Row1,
+      display_line(Size),nl,
+      write('    |'),
+      display_cells(H),nl,
+      write('  '),
+      write(Number),
+      write(' |'),
+      display_row(H,Row,Col,MiddleConstraints,MiddleConstraints2),nl,
+      write('    |'),
+      display_cells(H),nl,
+      Row2 is Row+1,
+      display_board(T,Row2,Col,MiddleConstraints2,Tail,Size).
+
+display_board([L|Ls],Row,Col,CellsAround,[Row1-Number|Tail],Size):-
+      Row\=Row1,
+      display_line(Size),nl,
+      write('    |'),
+      display_cells(L),nl,
+      write('    |'),
+      display_row(L,Row,Col,CellsAround,CellsAround2),nl,
+      write('    |'),
+      display_cells(L),nl,
+      Row2 is Row+1,
+      display_board(Ls,Row2,Col,CellsAround2,[Row1-Number|Tail],Size).
+
+display_board([L|Ls],Row,Col,CellsAround,[],Size):-
+      display_line(Size),nl,
+      write('    |'),
+      display_cells(L),nl,
+      write('    |'),
+      display_row(L,Row,Col,CellsAround,CellsAround2),nl,
+      write('    |'),
+      display_cells(L),nl,
+      Row2 is Row+1,
+      display_board(Ls,Row2,Col,CellsAround2,[],Size).
+
+display_col(_,Size,Size).
+display_col([Col-Num|Tail],Size,N):-
+        N==Col,
+        write(' '),
+        write(Num),
+        write(' '),
+        N1 is N+1,
+        display_col(Tail,Size,N1).
+
+display_col([Col-Num|Tail],Size,N):-
+        N\=Col,
+        write('    '),
+        N1 is N+1,
+        display_col([Col-Num|Tail],Size,N1).
+
+display_col([],Size,N):-
+        write('    '),
+        N1 is N+1,
+        display_col([],Size,N1).
+
+display_row([],_,_,S,S).
+display_row([_|Xs],Row,Col,[Row1-Col1-Number|Tail],S):-
+        Row==Row1,
+        Col==Col1,
+        write(' '),
+        write(Number),
+        write(' |'),
+        Col2 is Col+1,
+        display_row(Xs,Row,Col2,Tail,S).
+
+display_row([X|Xs],Row,Col,[],S):-
+        X==0,
+        write('   '),write('|'),
+        Col2 is Col+1,
+        display_row(Xs,Row,Col2,[],S).
+
+display_row([X|Xs],Row,Col,[],S):-
+        X==1,
+        write('@@@'),write('|'),
+        Col2 is Col+1,
+        display_row(Xs,Row,Col2,[],S).
+
+display_row([X|Xs],Row,Col,[Row1-Col1-Number|Tail],S):-
+        ((Row\=Row1,
+        Col\=Col1);
+        (Row==Row1,
+        Col\=Col1);
+        (Row\=Row1,
+        Col==Col1)),
+        X==0,
+        write('   '),write('|'),
+        Col2 is Col+1,
+        display_row(Xs,Row,Col2,[Row1-Col1-Number|Tail],S).
+
+display_row([X|Xs],Row,Col,[Row1-Col1-Number|Tail],S):-
+      ((Row\=Row1,
+      Col\=Col1);
+      (Row==Row1,
+      Col\=Col1);
+      (Row\=Row1,
+      Col==Col1)),
+      X==1,
+      write('@@@'),write('|'),
+      Col2 is Col+1,
+      display_row(Xs,Row,Col2,[Row1-Col1-Number|Tail],S).
+
+
+display_cells([]).
+display_cells([X|Xs]):-
+  X==0,
+  write('   |'),
+  display_cells(Xs).
+
+display_cells([X|Xs]):-
+  X==1,
+  write('@@@|'),
+  display_cells(Xs).
+
+display_line(Size):-
+  write('    '),
+  display_line_aux(Size).
+display_line_aux(0).
+display_line_aux(Size):-
+  write('----'),
+  S is Size-1,
+  display_line_aux(S).
