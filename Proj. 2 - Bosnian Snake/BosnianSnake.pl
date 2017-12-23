@@ -1,6 +1,7 @@
 :-use_module(library(clpfd)).
 :-use_module(library(lists)).
 :- use_module(library(between)).
+:-use_module(library(timeout)).
 :- include('Constraints.pl').
 :- include('Interface.pl').
 :- include('Utilities.pl').
@@ -16,7 +17,10 @@ puzzle(3, 13, [2-4, 5-1,6-1], [7-3], [2-2-4, 7-6-5, 10-10-3]).
 solve_generated_board(Size,MiddleRestricions,HorizontalRestrictions,VerticalRestrictions):-
   repeat,
   generateBoard(Size,MiddleRestricions,HorizontalRestrictions,VerticalRestrictions,NPuzzle),
-  main(NPuzzle),!.
+  time_out(main(NPuzzle),1000,Result),
+  write(Result),nl,
+  !,
+  (Result =time_out ->solve_generated_board(Size,MiddleRestricions,HorizontalRestrictions,VerticalRestrictions);write('Bye!')).
 
 %N é o número do puzzle
 main(N):-
