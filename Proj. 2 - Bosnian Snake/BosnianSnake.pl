@@ -13,11 +13,13 @@
 puzzle(1, 6, [5-1, 2-2], [], [5-2-6, 3-5-6]).
 puzzle(2, 8, [2-2, 5-1], [7-3, 4-5], [2-2-4, 7-6-5]).
 puzzle(3, 13, [2-4, 5-1,6-1], [7-3], [2-2-4, 7-6-5, 10-10-3]).
+puzzle(4, 6, [4-3],[4-2],[3-3-5]).
+puzzle(5,10, [7-3,8-3],[3-6],[4-8-6,6-3-2]).
 
 solve_generated_board(Size,MiddleRestricions,HorizontalRestrictions,VerticalRestrictions):-
   repeat,
   generateBoard(Size,MiddleRestricions,HorizontalRestrictions,VerticalRestrictions,NPuzzle),
-  time_out(main(NPuzzle),1000,Result),
+  time_out(main(NPuzzle),2000,Result),
   nl,write(Result),nl,!,
   (Result =time_out ->solve_generated_board(Size,MiddleRestricions,HorizontalRestrictions,VerticalRestrictions);write('Bye!')).
 
@@ -33,7 +35,7 @@ main(N):-
   conectivity(List, Size),
   count(1, List, #=, Count),
   reset_timer,
-  labeling([minimize(Count)], List),
+  labeling([ffc], List),
   print_time,
   fd_statistics,
   final_display(Board, 1, 1, HorizontalConstraints, VerticalConstraints, MiddleConstraints, Size).
