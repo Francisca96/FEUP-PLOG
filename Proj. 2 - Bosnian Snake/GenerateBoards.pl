@@ -4,7 +4,7 @@ generateBoard(Size,MiddleRestricions,HorizontalRestrictions,VerticalRestrictions
       generateMR(Size,MiddleRestricions,MiddleList),
       generateHR(Size,HorizontalRestrictions,HorizontalList),
       generateVR(Size,VerticalRestrictions,VerticalList),
-      random(10,100,NPuzzle),
+      random(10,20,NPuzzle),
       assert(puzzle(NPuzzle,Size,HorizontalList,VerticalList,MiddleList)).
 
 generateHR(_,0,[]).
