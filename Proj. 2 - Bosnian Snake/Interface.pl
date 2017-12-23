@@ -6,57 +6,57 @@ final_display([H|T],Row,Col,HorizontalConstraints,VerticalConstraints,MiddleCons
   display_line(Size).
 
 display_board([],_,_,_,_,_).
-display_board([H|T],Row,Col,MiddleConstraints,[Row1-Number|Tail],Size):-
-      Row==Row1,
-      display_line(Size),nl,
-      write('    |'),
-      display_cells(H),nl,
-      write('  '),
-      write(Number),
-      write(' |'),
-      display_row(H,Row,Col,MiddleConstraints,MiddleConstraints2),nl,
-      write('    |'),
-      display_cells(H),nl,
-      Row2 is Row+1,
-      display_board(T,Row2,Col,MiddleConstraints2,Tail,Size).
+display_board([H|T],Row,Col,MiddleConstraints,HorizontalConstraints,Size):-
+  member(Row-Val, HorizontalConstraints),
+  display_line(Size),nl,
+  write('    |'),
+  display_cells(H),nl,
+  write('  '),
+  write(Val),
+  write(' |'),
+  display_row(H,Row,Col,MiddleConstraints,MiddleConstraints2),nl,
+  write('    |'),
+  display_cells(H),nl,
+  Row2 is Row+1,
+  display_board(T,Row2,Col,MiddleConstraints2,HorizontalConstraints,Size).
 
-display_board([L|Ls],Row,Col,CellsAround,[Row1-Number|Tail],Size):-
-      Row\=Row1,
-      display_line(Size),nl,
-      write('    |'),
-      display_cells(L),nl,
-      write('    |'),
-      display_row(L,Row,Col,CellsAround,CellsAround2),nl,
-      write('    |'),
-      display_cells(L),nl,
-      Row2 is Row+1,
-      display_board(Ls,Row2,Col,CellsAround2,[Row1-Number|Tail],Size).
+display_board([L|Ls],Row,Col,MiddleConstraints,HorizontalConstraints,Size):-
+  \+ member(Row-_, HorizontalConstraints),
+  display_line(Size),nl,
+  write('    |'),
+  display_cells(L),nl,
+  write('    |'),
+  display_row(L,Row,Col,MiddleConstraints,MiddleConstraints2),nl,
+  write('    |'),
+  display_cells(L),nl,
+  Row2 is Row+1,
+  display_board(Ls,Row2,Col,MiddleConstraints2,HorizontalConstraints,Size).
 
-display_board([L|Ls],Row,Col,CellsAround,[],Size):-
+display_board([L|Ls],Row,Col,MiddleConstraints,[],Size):-
       display_line(Size),nl,
       write('    |'),
       display_cells(L),nl,
       write('    |'),
-      display_row(L,Row,Col,CellsAround,CellsAround2),nl,
+      display_row(L,Row,Col,MiddleConstraints,MiddleConstraints2),nl,
       write('    |'),
       display_cells(L),nl,
       Row2 is Row+1,
-      display_board(Ls,Row2,Col,CellsAround2,[],Size).
+      display_board(Ls,Row2,Col,MiddleConstraints2,[],Size).
 
 display_col(_,Size,Size).
-display_col([Col-Num|Tail],Size,N):-
-        N==Col,
+display_col(VerticalConstraints,Size,N):-
+        member(N-Val, VerticalConstraints),
         write(' '),
-        write(Num),
+        write(Val),
         write(' '),
         N1 is N+1,
-        display_col(Tail,Size,N1).
+        display_col(VerticalConstraints,Size,N1).
 
-display_col([Col-Num|Tail],Size,N):-
-        N\=Col,
+display_col(VerticalConstraints,Size,N):-
+        \+ member(N-_, VerticalConstraints),
         write('    '),
         N1 is N+1,
-        display_col([Col-Num|Tail],Size,N1).
+        display_col(VerticalConstraints,Size,N1).
 
 display_col([],Size,N):-
         write('    '),

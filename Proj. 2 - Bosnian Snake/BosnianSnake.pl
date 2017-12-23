@@ -18,8 +18,7 @@ solve_generated_board(Size,MiddleRestricions,HorizontalRestrictions,VerticalRest
   repeat,
   generateBoard(Size,MiddleRestricions,HorizontalRestrictions,VerticalRestrictions,NPuzzle),
   time_out(main(NPuzzle),1000,Result),
-  write(Result),nl,
-  !,
+  write(Result),nl,!,
   (Result =time_out ->solve_generated_board(Size,MiddleRestricions,HorizontalRestrictions,VerticalRestrictions);write('Bye!')).
 
 %N é o número do puzzle
