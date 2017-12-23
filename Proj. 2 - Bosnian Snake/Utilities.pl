@@ -3,7 +3,6 @@ get_line(Min, Max,Line):-
     To is Min + Count - 1,
     findall(I, (between(Min, To, I)), Line).
 
-
 get_col(Min,Max,Size,Col):-
   Min is Size +1,
   findall(I,( between(Min, Max, I), 0 is (I-1) mod Size),Col).
@@ -11,9 +10,8 @@ get_col(Min,Max,Size,Col):-
 get_col(Min, Max, Size,  Col):-
   findall(I,( between(Min, Max, I), 0 is I mod Size),Col).
 
-
-  get_middle_cells(Min,Max, Size, MiddleCells):-
-    findall(I, (between(Min, Max,I),\+ 0 is I mod Size, \+ 0 is (I-1) mod Size),MiddleCells).
+get_middle_cells(Min,Max, Size, MiddleCells):-
+  findall(I, (between(Min, Max,I),\+ 0 is I mod Size, \+ 0 is (I-1) mod Size),MiddleCells).
 
 get_direct_neighbors(Board, Index, Size, DirectNeighbors):-
   Pos1 is Index-Size,
@@ -35,12 +33,10 @@ get_diagonal_neighbors(Board, Index, Size, DiagonalNeighbors):-
                 nth1(Pos3, Board, Cell);
                 nth1(Pos4, Board, Cell)), DiagonalNeighbors).
 
+reset_timer :-
+  statistics(walltime,_).
 
-
-                reset_timer :- statistics(walltime,_).
-
-                print_time :-
-                	statistics(walltime,[_,T]),
-                	TS is ((T//10)*10)/1000,
-                  nl, write('Solution Time: '), write(TS), write('s'), nl, nl.
-                  
+print_time :-
+  statistics(walltime,[_,T]),
+  TS is ((T//10)*10)/1000,
+  nl, write('Solution Time: '), write(TS), write('s'), nl, nl.

@@ -1,11 +1,11 @@
 :-use_module(library(clpfd)).
 :-use_module(library(lists)).
+:- use_module(library(between)).
 :- include('Constraints.pl').
 :- include('Interface.pl').
 :- include('Utilities.pl').
 :- include('Conectivity.pl').
-:- use_module(library(between)).
-:-include('GenerateBoards.pl').
+:- include('GenerateBoards.pl').
 :-dynamic puzzle/5.
 
 %puzzle(numero, dimensao, numeros de fora(linha numero), numeros de fora(coluna numero), numeros de dentro(linha coluna numero))
@@ -18,6 +18,7 @@ solve_generated_board(Size,MiddleRestricions,HorizontalRestrictions,VerticalRest
   repeat,
   generateBoard(Size,MiddleRestricions,HorizontalRestrictions,VerticalRestrictions,NPuzzle),
   main(NPuzzle),!.
+
 %N é o número do puzzle
 main(N):-
   reset_timer,

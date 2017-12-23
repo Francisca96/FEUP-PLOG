@@ -5,7 +5,7 @@ conectivity(List, Size):-
   constrain_first_line(List, Size),
   constrain_first_col(List, Size),
   constrain_last_col(List, Size),
- constrain_middle(List, Size).
+  constrain_middle(List, Size).
 
 constrain_init_final_neighbors(List, Size):-
   TotalSize is Size*Size,
@@ -39,8 +39,6 @@ constrain_vertex(List, Size):-
   nth1(Pos5, List, Cell4),
   nth1(Pos6, List, DiagonalCell1),
   Elem2 #= 1 #=> Cell3 #= 1 #/\ Cell4 #= 1 #/\ DiagonalCell1 #= 0.
-
-
 
 constrain_first_col(List, Size):-
   Min is Size+1,
