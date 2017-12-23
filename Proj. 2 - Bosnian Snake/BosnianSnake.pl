@@ -10,7 +10,7 @@
 :-dynamic puzzle/5.
 
 %puzzle(numero, dimensao, numeros de fora(linha numero), numeros de fora(coluna numero), numeros de dentro(linha coluna numero))
-puzzle(1, 6, [5-1, 2-2], [], [3-5-6, 5-2-6]).
+puzzle(1, 6, [5-1, 2-2], [], [5-2-6, 3-5-6]).
 puzzle(2, 8, [2-2, 5-1], [7-3, 4-5], [2-2-4, 7-6-5]).
 puzzle(3, 13, [2-4, 5-1,6-1], [7-3], [2-2-4, 7-6-5, 10-10-3]).
 
