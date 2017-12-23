@@ -138,14 +138,3 @@ constrain_middle_cells_connect(List, [Elem|Tail], Size):-
   nth1(Elem,List,Cell1),
   Cell1 #= 1 #=> Sum #= 2,
   constrain_middle_cells_connect(List, Tail, Size).
-
-/*%diagonals
-Pos4 is Pos1+1,
-Pos5 is Pos2+1,
-nth1(Pos4, List, Diag1),
-nth1(Pos5, List, Diag2),
-get_direct_neighbors(List, Pos4, Size, DirNeigh1),
-get_direct_neighbors(List, Pos5, Size, DirNeigh2),
-intersection(DirNeigh1, DirNeigh2, Intersection),
-Cell1 #= 1 #/\ Diag1 #= 1 #=> global_cardinality(Intersection, [1-1, 0-1]),
-Cell1 #= 1 #/\ Diag2 #= 1 #=> global_cardinality(Intersection, [1-1, 0-1]),*/
